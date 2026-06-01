@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Edit Achievement</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+
+</head>
+
+<body class="bg-slate-950 text-white p-10">
+
+<div class="max-w-4xl mx-auto">
+
+    <div class="flex justify-between items-center mb-8">
+
+        <h1 class="text-5xl font-bold text-cyan-400">
+            Edit Achievement
+        </h1>
+
+        <a
+        href="/achievements"
+        class="bg-gray-600 px-6 py-3 rounded-xl">
+            Back
+        </a>
+
+    </div>
+
+    <div class="bg-slate-900 p-8 rounded-2xl">
+
+        <form method="POST">
+
+            <input
+            type="text"
+            name="title"
+            value="{{ achievement.title }}"
+            class="w-full p-4 rounded-xl bg-slate-800 mb-4"
+            required>
+
+            <textarea
+            name="description"
+            class="w-full p-4 rounded-xl bg-slate-800 mb-4"
+            rows="6"
+            required>{{ achievement.description }}</textarea>
+
+            <div class="flex gap-3">
+
+                <button
+                type="submit"
+                class="bg-cyan-500 text-black px-6 py-3 rounded-xl font-bold">
+                    Update Achievement
+                </button>
+
+                <a
+                href="/achievements"
+                class="bg-red-500 px-6 py-3 rounded-xl font-bold">
+                    Cancel
+                </a>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+</body>
+</html>

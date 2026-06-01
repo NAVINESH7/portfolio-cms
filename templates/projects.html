@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Projects CMS</title>
+<script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-slate-950 text-white min-h-screen">
+
+<div class="max-w-7xl mx-auto p-8">
+
+<div class="flex justify-between items-center mb-10">
+
+<h1 class="text-4xl font-bold text-cyan-400">
+Projects CMS
+</h1>
+
+<a href="/admin"
+class="bg-slate-800 px-5 py-3 rounded-xl">
+Back
+</a>
+
+</div>
+
+<div class="mb-8">
+
+<a href="/create-project-page"
+class="bg-cyan-500 text-black font-bold px-6 py-3 rounded-xl">
+
++ Add Project
+
+</a>
+
+</div>
+
+<div class="grid md:grid-cols-2 gap-6">
+
+{% for project in projects %}
+
+<div class="bg-slate-900 border border-slate-800 rounded-2xl p-6">
+
+<h2 class="text-2xl font-bold text-cyan-400 mb-3">
+{{ project.title }}
+</h2>
+
+<p class="text-gray-400 mb-4">
+{{ project.short_description }}
+</p>
+<div class="flex gap-3 mt-4">
+
+    <a
+    href="/edit-project/{{ project.slug }}"
+    class="bg-yellow-500 text-black px-4 py-2 rounded-lg font-bold">
+        Edit
+    </a>
+
+    <a
+    href="/delete-project/{{ project.slug }}"
+    onclick="return confirm('Delete this project?')"
+    class="bg-red-500 text-white px-4 py-2 rounded-lg font-bold">
+        Delete
+    </a>
+
+</div>
+
+</div>
+
+{% endfor %}
+
+</div>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+name="viewport"
+content="width=device-width, initial-scale=1.0"
+>
+
+<title>Edit Project</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+
+<style>
+
+body{
+background:#020617;
+color:white;
+font-family:Arial;
+}
+
+.glass{
+background:rgba(255,255,255,0.05);
+border:1px solid rgba(255,255,255,0.08);
+backdrop-filter:blur(14px);
+}
+
+.input-box{
+background:black;
+border:1px solid rgba(34,211,238,0.15);
+outline:none;
+color:white;
+}
+
+.input-box:focus{
+border:1px solid #22d3ee;
+}
+
+</style>
+
+</head>
+
+<body class="p-6 md:p-10">
+
+<div class="max-w-5xl mx-auto">
+
+<div class="glass rounded-3xl p-8">
+
+<h1 class="text-4xl font-bold text-cyan-400 mb-8">
+
+Edit Project
+
+</h1>
+
+<form method="POST" class="space-y-6">
+
+<input
+type="text"
+name="title"
+value="{{ project.title }}"
+required
+class="w-full input-box p-5 rounded-2xl"
+>
+
+<textarea
+name="short_description"
+rows="3"
+required
+class="w-full input-box p-5 rounded-2xl"
+>{{ project.short_description }}</textarea>
+
+<textarea
+name="full_description"
+rows="8"
+required
+class="w-full input-box p-5 rounded-2xl"
+>{{ project.full_description }}</textarea>
+
+<input
+type="text"
+name="category"
+value="{{ project.category }}"
+required
+class="w-full input-box p-5 rounded-2xl"
+>
+
+<input
+type="number"
+name="year"
+value="{{ project.year }}"
+required
+class="w-full input-box p-5 rounded-2xl"
+>
+
+<input
+type="text"
+name="tech_stack"
+value="{{ ', '.join(project.tech_stack) }}"
+required
+class="w-full input-box p-5 rounded-2xl"
+>
+
+<div class="flex gap-4">
+
+<button
+type="submit"
+class="bg-cyan-400 text-black px-8 py-4 rounded-2xl font-bold"
+>
+
+Save Project
+
+</button>
+
+<a
+href="/admin"
+class="bg-red-500 px-8 py-4 rounded-2xl font-bold"
+>
+
+Cancel
+
+</a>
+
+</div>
+
+</form>
+
+<hr class="my-10 border-cyan-400/20">
+
+<h2 class="text-3xl font-bold text-cyan-400 mb-6">
+
+Project Gallery
+
+</h2>
+
+<form
+action="/upload-project-images/{{ project.slug }}"
+method="POST"
+enctype="multipart/form-data"
+class="mb-10"
+>
+
+<input
+type="file"
+name="images"
+multiple
+class="w-full input-box p-5 rounded-2xl mb-6"
+>
+
+<button
+type="submit"
+class="bg-cyan-400 text-black px-8 py-4 rounded-2xl font-bold"
+>
+
+Upload Images
+
+</button>
+
+</form>
+
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+{% if project.gallery %}
+
+{% for image in project.gallery %}
+
+<div class="glass rounded-2xl overflow-hidden">
+
+<img
+src="{{ image }}"
+class="w-full h-60 object-cover"
+>
+
+<div class="p-4">
+
+<a
+href="/delete-project-image/{{ project.slug }}/{{ image.split('/')[-1] }}"
+class="bg-red-500 px-4 py-2 rounded-xl font-bold inline-block"
+>
+
+Delete Image
+
+</a>
+
+</div>
+
+</div>
+
+{% endfor %}
+
+{% else %}
+
+<div class="text-gray-400 text-lg">
+
+No gallery images uploaded yet.
+
+</div>
+
+{% endif %}
+
+</div>
+
+</div>
+
+</div>
+
+</body>
+
+</html>

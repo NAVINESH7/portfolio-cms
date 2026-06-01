@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Internships CMS</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+
+</head>
+
+<body class="bg-slate-950 text-white min-h-screen">
+
+<div class="max-w-7xl mx-auto p-8">
+
+<div class="flex justify-between items-center mb-10">
+
+<h1 class="text-4xl font-bold text-cyan-400">
+Internships CMS
+</h1>
+
+<a href="/admin"
+class="bg-slate-800 px-5 py-3 rounded-xl">
+Back
+</a>
+
+</div>
+
+<div class="mb-8">
+
+<form action="/add-internship" method="POST" class="space-y-4">
+
+<input
+type="text"
+name="company"
+placeholder="Company Name"
+required
+class="w-full bg-slate-900 p-3 rounded-xl"
+>
+
+<textarea
+name="description"
+placeholder="Internship Description"
+required
+rows="4"
+class="w-full bg-slate-900 p-3 rounded-xl"
+></textarea>
+
+<button
+type="submit"
+class="bg-cyan-500 text-black px-6 py-3 rounded-xl font-bold"
+>
+
++ Add Internship
+
+</button>
+
+</form>
+
+</div>
+
+<div class="grid md:grid-cols-2 gap-6">
+
+{% for internship in internships %}
+
+<div class="bg-slate-900 rounded-2xl p-6">
+
+<h2 class="text-2xl font-bold text-cyan-400">
+{{ internship.company }}
+</h2>
+
+<p class="text-gray-400 mt-3">
+{{ internship.description }}
+</p>
+
+<div class="mt-5 flex gap-3">
+
+<a
+href="/edit-internship/{{ loop.index0 }}"
+class="bg-yellow-500 text-black px-4 py-2 rounded-lg font-bold"
+>
+Edit
+</a>
+
+<a
+href="/delete-internship/{{ loop.index0 }}"
+class="bg-red-500 px-4 py-2 rounded-lg font-bold"
+>
+Delete
+</a>
+
+</div>
+
+</div>
+
+{% endfor %}
+
+</div>
+
+</div>
+
+</body>
+</html>

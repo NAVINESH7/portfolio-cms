@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Edit Activity</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+
+</head>
+
+<body class="bg-slate-950 text-white min-h-screen flex justify-center items-center">
+
+<form
+method="POST"
+class="bg-slate-900 p-8 rounded-2xl w-full max-w-lg"
+>
+
+<h1 class="text-3xl font-bold text-cyan-400 mb-6">
+Edit Activity
+</h1>
+
+<input
+type="text"
+name="name"
+value="{{ activity.name }}"
+required
+class="w-full bg-slate-800 p-4 rounded-xl mb-6"
+>
+
+<button
+type="submit"
+class="w-full bg-cyan-500 text-black p-4 rounded-xl font-bold"
+>
+Update Activity
+</button>
+
+<a
+href="/extra-curricular"
+class="block text-center mt-4 text-cyan-400"
+>
+← Back
+</a>
+
+</form>
+
+</body>
+</html>

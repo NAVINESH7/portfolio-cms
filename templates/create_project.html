@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+name="viewport"
+content="width=device-width, initial-scale=1.0"
+>
+
+<title>Create Project</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+
+</head>
+
+<body class="bg-slate-950 text-white min-h-screen">
+
+<div class="max-w-4xl mx-auto p-8">
+
+<div class="flex justify-between items-center mb-10">
+
+<h1 class="text-4xl font-bold text-cyan-400">
+
+Create Project
+
+</h1>
+
+<a
+href="/projects"
+class="bg-slate-800 px-5 py-3 rounded-xl"
+>
+
+Back
+
+</a>
+
+</div>
+
+<form
+action="/create-project"
+method="POST"
+class="space-y-5"
+>
+
+<input
+type="text"
+name="title"
+placeholder="Project Title"
+required
+class="w-full p-4 rounded-xl bg-slate-900 border border-slate-700"
+>
+
+<textarea
+name="short_description"
+rows="3"
+placeholder="Short Description"
+required
+class="w-full p-4 rounded-xl bg-slate-900 border border-slate-700"
+></textarea>
+
+<textarea
+name="full_description"
+rows="6"
+placeholder="Full Description"
+required
+class="w-full p-4 rounded-xl bg-slate-900 border border-slate-700"
+></textarea>
+
+<input
+type="text"
+name="category"
+placeholder="Category"
+required
+class="w-full p-4 rounded-xl bg-slate-900 border border-slate-700"
+>
+
+<input
+type="number"
+name="year"
+placeholder="Year"
+required
+class="w-full p-4 rounded-xl bg-slate-900 border border-slate-700"
+>
+
+<input
+type="text"
+name="tech_stack"
+placeholder="Python, Flask, HTML, CSS"
+required
+class="w-full p-4 rounded-xl bg-slate-900 border border-slate-700"
+>
+
+<button
+type="submit"
+class="bg-cyan-500 text-black px-8 py-4 rounded-xl font-bold hover:bg-cyan-400"
+>
+
+Create Project
+
+</button>
+
+</form>
+
+</div>
+
+</body>
+
+</html>

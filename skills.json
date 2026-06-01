@@ -1,0 +1,34 @@
+[
+    {
+        "name": "Ki-Cad ",
+        "level": "89"
+    },
+    {
+        "name": "AutoCAD",
+        "level": "82"
+    },
+    {
+        "name": "Cadence Allegro",
+        "level": "66"
+    },
+    {
+        "name": "Embedded C",
+        "level": "70"
+    },
+    {
+        "name": "Python",
+        "level": "60"
+    },
+    {
+        "name": "Bare metal coding",
+        "level": "50"
+    },
+    {
+        "name": "PCB Design ",
+        "level": 96
+    },
+    {
+        "name": "PCB Design",
+        "level": "62"
+    }
+]

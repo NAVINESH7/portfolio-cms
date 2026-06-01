@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+<title>Admin Portfolio CMS</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+
+<link
+rel="stylesheet"
+href="https://unpkg.com/aos@2.3.1/dist/aos.css"
+/>
+
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+}
+
+body{
+background:#020617;
+color:white;
+font-family:Arial,sans-serif;
+overflow-x:hidden;
+}
+
+.grid-bg{
+background-image:
+linear-gradient(rgba(0,255,255,0.05) 1px, transparent 1px),
+linear-gradient(90deg, rgba(0,255,255,0.05) 1px, transparent 1px);
+background-size:40px 40px;
+}
+
+.glass{
+background:rgba(255,255,255,0.04);
+border:1px solid rgba(255,255,255,0.08);
+backdrop-filter:blur(14px);
+}
+
+.hover-card{
+transition:0.3s;
+}
+
+.hover-card:hover{
+transform:translateY(-8px);
+box-shadow:0 0 30px rgba(34,211,238,0.2);
+}
+
+.btn{
+transition:0.3s;
+}
+
+.btn:hover{
+transform:scale(1.03);
+}
+
+</style>
+
+</head>
+
+<body class="grid-bg min-h-screen p-4 md:p-10">
+
+<div class="max-w-7xl mx-auto">
+
+<!-- HEADER -->
+
+<div class="flex flex-col md:flex-row justify-between items-center gap-6 mb-12">
+
+<h1 class="text-3xl md:text-6xl font-bold text-cyan-400">
+
+Admin Portfolio CMS
+
+</h1>
+
+<a
+href="/logout"
+class="bg-red-500 px-8 py-4 rounded-2xl font-bold btn"
+>
+
+Logout
+
+</a>
+
+</div>
+
+<!-- DASHBOARD OVERVIEW -->
+
+<div
+class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16"
+data-aos="fade-up"
+>
+
+<!-- Visitor Analytics -->
+
+<div class="glass rounded-3xl p-6 lg:col-span-2">
+
+<h3 class="text-2xl font-bold text-cyan-400 mb-6">
+
+📊 Visitor Analytics
+
+</h3>
+
+<div class="grid grid-cols-2 gap-6">
+
+<div>
+
+<p class="text-gray-400 text-sm">
+Total Visitors
+</p>
+
+<h4
+id="visitorCount"
+class="text-4xl font-bold text-cyan-400 mt-2"
+>
+{{ visitor_count }}
+</h4>
+
+</div>
+
+<div>
+
+<p class="text-gray-400 text-sm">
+Today's Visitors
+</p>
+
+<h4 class="text-4xl font-bold text-cyan-400 mt-2">
+{{ visitor_stats.today }}
+</h4>
+
+</div>
+
+<div>
+
+<p class="text-gray-400 text-sm">
+Last 7 Days
+</p>
+
+<h4 class="text-4xl font-bold text-cyan-400 mt-2">
+{{ visitor_stats.week }}
+</h4>
+
+</div>
+
+<div>
+
+<p class="text-gray-400 text-sm">
+Last 30 Days
+</p>
+
+<h4 class="text-4xl font-bold text-cyan-400 mt-2">
+{{ visitor_stats.month }}
+</h4>
+
+</div>
+
+</div>
+
+</div>
+
+<!-- Total Projects -->
+
+<div class="glass rounded-3xl p-6">
+
+<p class="text-gray-400 mb-3">
+Total Projects
+</p>
+
+<h3 class="text-5xl font-bold text-cyan-400">
+{{ projects|length }}
+</h3>
+
+</div>
+
+<!-- Total Skills -->
+
+<div class="glass rounded-3xl p-6">
+
+<p class="text-gray-400 mb-3">
+Total Skills
+</p>
+
+<h3 class="text-5xl font-bold text-cyan-400">
+{{ skills|length }}
+</h3>
+
+</div>
+
+<!-- Resume Status -->
+
+<div class="glass rounded-3xl p-6">
+
+<p class="text-gray-400 mb-3">
+Resume Status
+</p>
+
+<h3 class="text-2xl font-bold text-cyan-400">
+
+{% if settings.resume %}
+Uploaded
+{% else %}
+Not Uploaded
+{% endif %}
+
+</h3>
+
+</div>
+
+</div>
+
+<!-- CMS MENU -->
+
+<div
+class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+data-aos="fade-up"
+>
+
+<a
+href="/resume"
+class="glass rounded-3xl p-10 text-center hover-card"
+>
+
+<div class="text-5xl mb-5">📄</div>
+
+<h2 class="text-3xl font-bold text-cyan-400">
+
+Resume Manager
+
+</h2>
+
+<p class="text-gray-400 mt-3">
+
+Manage Resume Uploads
+
+</p>
+
+</a>
+
+<a
+href="/website"
+class="glass rounded-3xl p-10 text-center hover-card"
+>
+
+<div class="text-5xl mb-5">🌐</div>
+
+<h2 class="text-3xl font-bold text-cyan-400">
+
+Website Settings
+
+</h2>
+
+<p class="text-gray-400 mt-3">
+
+Hero, About & Contact
+
+</p>
+
+</a>
+
+<a
+href="/skills"
+class="glass rounded-3xl p-10 text-center hover-card"
+>
+
+<div class="text-5xl mb-5">🛠️</div>
+
+<h2 class="text-3xl font-bold text-cyan-400">
+
+Skills CMS
+
+</h2>
+
+<p class="text-gray-400 mt-3">
+
+Manage Skills
+
+</p>
+
+</a>
+
+<a
+href="/soft-skills"
+class="glass rounded-3xl p-10 text-center hover-card"
+>
+
+<div class="text-5xl mb-5">🤝</div>
+
+<h2 class="text-3xl font-bold text-cyan-400">
+
+Soft Skills CMS
+
+</h2>
+
+<p class="text-gray-400 mt-3">
+
+Manage Soft Skills
+
+</p>
+
+</a>
+
+
+
+<a
+href="/extra-curricular"
+class="glass rounded-3xl p-10 text-center hover-card"
+>
+
+<div class="text-5xl mb-5">🎭</div>
+
+<h2 class="text-3xl font-bold text-cyan-400">
+
+Co & Extra Curricular Activities
+
+</h2>
+
+<p class="text-gray-400 mt-3">
+
+Manage Activities
+
+</p>
+
+</a>
+
+
+
+<a
+href="/education"
+class="glass rounded-3xl p-10 text-center hover-card"
+>
+
+<div class="text-5xl mb-5">🎓</div>
+
+<h2 class="text-3xl font-bold text-cyan-400">
+
+Education
+
+</h2>
+
+<p class="text-gray-400 mt-3">
+
+Manage Qualifications
+
+</p>
+
+</a>
+
+
+
+
+
+<a
+href="/internships"
+class="glass rounded-3xl p-10 text-center hover-card"
+>
+
+<div class="text-5xl mb-5">💼</div>
+
+<h2 class="text-3xl font-bold text-cyan-400">
+Internships
+</h2>
+
+<p class="text-gray-400 mt-3">
+Manage Experience
+</p>
+
+</a>
+
+
+
+
+
+<a
+href="/achievements"
+class="glass rounded-3xl p-10 text-center hover-card"
+>
+
+<div class="text-5xl mb-5">🏆</div>
+
+<h2 class="text-3xl font-bold text-cyan-400">
+Achievements
+</h2>
+
+<p class="text-gray-400 mt-3">
+Manage Achievements
+</p>
+
+</a>
+
+
+
+
+<a
+href="/certificates"
+class="glass rounded-3xl p-10 text-center hover-card"
+>
+
+<div class="text-5xl mb-5">📜</div>
+
+<h2 class="text-3xl font-bold text-cyan-400">
+Certificates CMS
+</h2>
+
+<p class="text-gray-400 mt-3">
+Manage Certificates
+</p>
+
+</a>
+
+
+
+
+
+<a
+href="/projects"
+class="glass rounded-3xl p-10 text-center hover-card"
+>
+
+<div class="text-5xl mb-5">🚀</div>
+
+<h2 class="text-3xl font-bold text-cyan-400">
+
+Projects
+
+</h2>
+
+<p class="text-gray-400 mt-3">
+
+Manage Portfolio Projects
+
+</p>
+
+</a>
+
+</div>
+
+<!-- FOOTER -->
+
+<footer
+class="glass rounded-3xl p-8 text-center mt-16"
+data-aos="fade-up"
+>
+
+<h3 class="text-2xl font-bold text-cyan-400 mb-3">
+
+Admin Portfolio CMS
+
+</h3>
+
+<p class="text-gray-400">
+
+Portfolio Management Dashboard
+
+</p>
+
+<p class="text-gray-500 mt-4">
+
+© 2026 Navinesh P K
+
+</p>
+
+</footer>
+
+</div>
+
+<script>
+
+AOS.init({
+duration:1000,
+once:true
+});
+
+</script>
+
+
+
+<script>
+
+async function updateVisitorCount() {
+
+    try {
+
+        const response = await fetch("/visitor-count");
+
+        const data = await response.json();
+
+        document.getElementById(
+            "visitorCount"
+        ).innerText = data.count;
+
+    }
+
+    catch(error) {
+
+        console.log(error);
+
+    }
+
+}
+
+setInterval(
+    updateVisitorCount,
+    5000
+);
+
+</script>
+
+</body>
+
+</html>

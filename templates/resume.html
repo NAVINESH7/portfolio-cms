@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Resume Manager</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+
+</head>
+
+<body class="bg-slate-950 text-white min-h-screen">
+
+<div class="max-w-6xl mx-auto p-8">
+
+<div class="flex justify-between items-center mb-10">
+
+<h1 class="text-4xl font-bold text-cyan-400">
+Resume Manager
+</h1>
+
+<a href="/admin"
+class="bg-slate-800 px-5 py-3 rounded-xl">
+Back
+</a>
+
+</div>
+
+<div class="bg-slate-900 rounded-2xl p-8">
+
+<h2 class="text-2xl font-bold text-cyan-400 mb-6">
+Current Resume
+</h2>
+
+{% if settings.resume %}
+
+<div class="space-y-4">
+
+<p class="text-lg">
+{{ settings.resume }}
+</p>
+
+<div class="flex flex-wrap gap-3">
+
+<a
+href="/download-resume"
+class="bg-green-500 text-black px-5 py-3 rounded-xl font-bold"
+>
+Download
+</a>
+
+<a
+href="/delete-resume"
+class="bg-red-500 px-5 py-3 rounded-xl font-bold"
+>
+Delete
+</a>
+
+</div>
+
+</div>
+
+{% else %}
+
+<p class="text-gray-400">
+No Resume Uploaded
+</p>
+
+{% endif %}
+
+<hr class="my-8 border-slate-700">
+
+<form
+action="/upload-resume"
+method="POST"
+enctype="multipart/form-data"
+class="space-y-4"
+>
+
+<input
+type="file"
+name="resume"
+required
+class="w-full bg-slate-800 p-3 rounded-xl"
+>
+
+<button
+type="submit"
+class="bg-cyan-500 text-black px-6 py-3 rounded-xl font-bold"
+>
+
+Upload Resume
+
+</button>
+
+</form>
+
+</div>
+
+</div>
+
+</body>
+</html>

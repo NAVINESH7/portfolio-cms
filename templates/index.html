@@ -1,0 +1,1311 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+name="viewport"
+content="width=device-width, initial-scale=1.0"
+>
+
+<title>NAVINESH P K</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+
+<link
+rel="stylesheet"
+href="https://unpkg.com/aos@2.3.1/dist/aos.css"
+/>
+
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+<style>
+
+nav a{
+
+transition:0.3s;
+
+}
+
+nav a:hover{
+
+color:#22d3ee;
+
+}
+
+nav a{
+
+position:relative;
+
+}
+
+nav a::after{
+
+content:"";
+
+position:absolute;
+
+left:0;
+bottom:-4px;
+
+width:0;
+
+height:2px;
+
+background:#22d3ee;
+
+transition:.3s;
+
+}
+
+nav a:hover::after{
+
+width:100%;
+
+}
+
+*{
+
+margin:0;
+padding:0;
+box-sizing:border-box;
+
+}
+
+html{
+
+scroll-behavior:smooth;
+
+}
+
+body{
+
+background:#020617;
+
+color:white;
+
+font-family:Arial;
+
+overflow-x:hidden;
+
+}
+
+.grid-bg{
+
+background-color:#020617;
+
+background-image:
+linear-gradient(rgba(34,211,238,0.08) 1px, transparent 1px),
+linear-gradient(90deg, rgba(34,211,238,0.08) 1px, transparent 1px);
+
+background-size:40px 40px;
+
+animation:gridMove 20s linear infinite;
+
+}
+
+@keyframes gridMove{
+
+0%{
+background-position:0 0;
+}
+
+100%{
+background-position:40px 40px;
+}
+
+}
+.glass{
+
+background:rgba(255,255,255,0.025);
+
+border:1px solid rgba(255,255,255,0.05);
+
+backdrop-filter:blur(8px);
+
+border-radius:24px;
+
+}
+
+.hover-card{
+
+transition:0.35s;
+
+}
+
+.hover-card:hover{
+
+transform:translateY(-10px);
+
+box-shadow:0 0 35px rgba(34,211,238,0.2);
+
+}
+
+.skill-bar{
+
+transition:1.5s;
+
+}
+
+.project-card{
+
+transform-style:preserve-3d;
+
+transition:0.35s;
+
+}
+
+.project-card:hover{
+
+transform:
+rotateX(6deg)
+rotateY(-6deg)
+translateY(-12px);
+
+box-shadow:
+0 0 30px rgba(34,211,238,.25);
+
+}
+
+.glow{
+
+position:fixed;
+
+width:500px;
+height:500px;
+
+border-radius:50%;
+
+filter:blur(120px);
+
+opacity:0.15;
+
+pointer-events:none;
+
+z-index:-1;
+
+}
+
+.glow1{
+
+background:#22d3ee;
+
+top:-100px;
+left:-100px;
+
+animation:float1 12s ease-in-out infinite;
+
+}
+
+.glow2{
+
+background:#06b6d4;
+
+right:-150px;
+bottom:-150px;
+
+animation:float2 15s ease-in-out infinite;
+
+}
+
+@keyframes float1{
+
+0%,100%{
+transform:translate(0,0);
+}
+
+50%{
+transform:translate(120px,80px);
+}
+
+}
+
+@keyframes float2{
+
+0%,100%{
+transform:translate(0,0);
+}
+
+50%{
+transform:translate(-120px,-80px);
+}
+
+}
+
+.btn-glow{
+
+transition:0.3s;
+
+}
+
+.btn-glow:hover{
+
+transform:translateY(-4px);
+
+box-shadow:
+0 0 25px rgba(34,211,238,0.5);
+
+}
+
+.floating{
+
+animation:floating 4s ease-in-out infinite;
+
+}
+
+@media (max-width:768px){
+
+nav{
+height:80px;
+}
+
+#mobileNav{
+top:80px;
+}
+
+}
+
+@keyframes floating{
+
+0%,100%{
+transform:translateY(0);
+}
+
+50%{
+transform:translateY(-15px);
+}
+
+}
+.glow3{
+
+background:#0ea5e9;
+
+top:40%;
+left:40%;
+
+width:350px;
+height:350px;
+
+animation:float3 18s ease-in-out infinite;
+
+}
+
+.glow4{
+
+background:#67e8f9;
+
+top:10%;
+right:25%;
+
+width:250px;
+height:250px;
+
+animation:float4 14s ease-in-out infinite;
+
+}
+
+@keyframes float3{
+
+0%,100%{
+transform:translate(0,0);
+}
+
+50%{
+transform:translate(150px,-100px);
+}
+
+}
+
+@keyframes float4{
+
+0%,100%{
+transform:translate(0,0);
+}
+
+50%{
+transform:translate(-120px,120px);
+}
+
+}
+
+
+.hero-reveal{
+opacity:0;
+transform:translateY(80px);
+animation:heroReveal 1.5s ease forwards;
+}
+
+@keyframes heroReveal{
+to{
+opacity:1;
+transform:translateY(0);
+}
+}
+
+.hero-title{
+opacity:0;
+transform:translateY(100px) scale(.9);
+animation:titleReveal 1.2s ease forwards;
+animation-delay:.4s;
+}
+
+@keyframes titleFloat{
+0%,100%{transform:translateY(0);}
+50%{transform:translateY(-15px);}
+}
+
+@keyframes titleGlow{
+0%,100%{
+text-shadow:0 0 20px #22d3ee,0 0 40px #22d3ee;
+}
+50%{
+text-shadow:0 0 40px #22d3ee,0 0 80px #22d3ee,0 0 120px #22d3ee;
+}
+}
+
+.floating-btn{
+opacity:0;
+transform:translateY(60px);
+animation:buttonReveal 1s ease forwards;
+animation-delay:.9s;
+}
+
+@keyframes buttonFloat{
+0%,100%{transform:translateY(0);}
+50%{transform:translateY(-10px);}
+}
+
+
+@keyframes titleReveal{
+0%{opacity:0;transform:translateY(100px) scale(.9);}
+100%{opacity:1;transform:translateY(0) scale(1);}
+}
+
+@keyframes buttonReveal{
+0%{opacity:0;transform:translateY(60px);}
+100%{opacity:1;transform:translateY(0);}
+}
+
+#mobileNav{
+transition:all 0.3s ease;
+}
+
+section{
+scroll-margin-top:100px;
+}
+
+@media(max-width:768px){
+
+section{
+padding-top:15px !important;
+padding-bottom:15px !important;
+margin-bottom:35px !important;
+}
+
+.glass{
+padding:14px !important;
+}
+
+.grid{
+gap:12px !important;
+}
+
+/* Main Titles */
+h2{
+font-size:26px !important;
+margin-bottom:12px !important;
+}
+
+/* Sub Titles */
+h3{
+font-size:20px !important;
+}
+
+/* Content */
+p,
+li{
+font-size:16px !important;
+}
+
+}
+
+@media(max-width:768px){
+
+    .grid-bg{
+        animation:none;
+    }
+
+}
+
+@media(max-width:768px){
+
+    .glow3,
+    .glow4{
+        display:none;
+    }
+
+}
+
+
+
+.hero-subtitle{
+opacity:0;
+transform:translateY(40px);
+animation:subtitleReveal 1s ease forwards;
+animation-delay:0.7s;
+}
+
+@keyframes subtitleReveal{
+0%{
+opacity:0;
+transform:translateY(40px);
+}
+100%{
+opacity:1;
+transform:translateY(0);
+}
+}
+
+.star{
+position:fixed;
+width:2px;
+height:2px;
+background:white;
+border-radius:50%;
+opacity:0;
+pointer-events:none;
+z-index:-1;
+animation:twinkle linear infinite;
+}
+
+@keyframes twinkle{
+0%,100%{
+opacity:0.1;
+transform:scale(1);
+}
+
+50%{
+opacity:0.8;
+transform:scale(2);
+}
+}
+
+
+</style>
+
+
+
+</head>
+
+<body class="grid-bg">
+
+
+
+<div class="glow glow1"></div>
+<div class="glow glow2"></div>
+<div class="glow glow3"></div>
+<div class="glow glow4"></div>
+
+
+<!-- NAVBAR -->
+
+<nav class="fixed top-0 left-0 w-full glass z-50 border-b border-cyan-400/10">
+
+<div class="max-w-7xl mx-auto flex items-center justify-between h-20 px-6">
+
+<button
+class="flex items-center justify-center w-12 h-12 text-4xl text-cyan-400 hover:text-white transition"
+onclick="toggleMenu()"
+>
+☰
+</button>
+
+<h1 class="text-[20px] md:text-2xl font-bold text-cyan-400 whitespace-nowrap">
+NAVINESH P K
+</h1>
+
+</div>
+
+</nav>
+
+<div
+id="mobileNav"
+class="hidden fixed top-20 left-0 w-56 h-screen bg-white/5 backdrop-blur-3xl border-r border-white/10 z-50"
+>
+
+<div class="flex flex-col p-6 space-y-5 text-lg">
+ 
+<a
+href="#home"
+onclick="toggleMenu()"
+class="hover:text-cyan-400 transition duration-300"
+>
+Home
+</a>
+
+<a href="#about" onclick="toggleMenu()">About</a>
+
+<a href="#skills" onclick="toggleMenu()">Skills</a>
+
+<a href="#projects" onclick="toggleMenu()">Projects</a>
+
+<a href="#internships" onclick="toggleMenu()">Internships</a>
+
+<a href="#achievements" onclick="toggleMenu()">Achievements</a>
+
+<a href="#certificates" onclick="toggleMenu()">Certificates</a>
+
+<a href="#soft-skills" onclick="toggleMenu()">Soft Skills</a>
+
+<a href="#extra-curricular" onclick="toggleMenu()">
+Co & Extra Curricular
+</a>
+
+<a href="#education" onclick="toggleMenu()">Education</a>
+
+<a href="#contact" onclick="toggleMenu()">Contact</a>
+
+<a href="/login">Admin</a>
+
+</div>
+
+</div>
+
+
+<!-- HERO -->
+
+<section
+id="home"
+class="min-h-[75vh] md:min-h-screen flex items-center justify-center px-6 sm:px-10 pt-20"
+>
+
+<div class="text-center w-full max-w-7xl mx-auto hero-reveal">
+
+<div
+class="floating w-28 h-28 sm:w-36 sm:h-36 md:w-44 md:h-44 rounded-full border-4 border-cyan-400 flex items-center justify-center mx-auto mb-8 text-5xl sm:text-6xl md:text-7xl font-bold text-cyan-400"
+data-aos="zoom-in"
+>
+
+N
+
+</div>
+
+<h1
+class="hero-title text-4xl sm:text-5xl md:text-6xl lg:text-6xl font-bold text-cyan-400 mb-3 break-words leading-tight"
+>
+{{ settings.hero_title }}
+
+</h1>
+
+<p
+class="hero-subtitle text-lg sm:text-2xl md:text-3xl text-gray-300 mb-6 px-2"
+>
+{{ settings.hero_subtitle }}
+</p>
+
+<div class="flex justify-center">
+
+<a
+href="/static/{{ settings.resume }}"
+target="_blank"
+class="btn-glow floating-btn bg-cyan-400 text-black px-8 py-4 sm:px-10 sm:py-5 rounded-2xl font-bold text-lg sm:text-xl text-center">
+
+View Resume
+
+</a>
+
+</div>
+
+</div>
+
+</section>
+
+<section
+id="about"
+data-aos="fade-up"
+class="max-w-7xl mx-auto py-6 md:py-16 px-6 sm:px-10"
+>
+
+<h2
+class="text-4xl sm:text-5xl md:text-6xl font-bold text-cyan-400 mb-8"
+>
+About Me
+</h2>
+
+<div
+class="glass rounded-3xl p-5 sm:p-8 hover-card"
+data-aos="fade-up"
+>
+
+<p class="text-lg sm:text-xl md:text-2xl text-gray-300 leading-relaxed">
+{{ settings.about_text }}
+</p>
+
+</div>
+
+</section>
+
+<!-- SKILLS -->
+
+<section
+id="skills"
+class="max-w-7xl mx-auto pt-24 pb-6 md:pt-28 md:pb-16 px-6 sm:px-10"
+>
+
+<h2
+class="text-3xl sm:text-5xl md:text-6xl font-bold text-cyan-400 mb-8"
+>
+
+Skills
+
+</h2>
+
+<div
+class="glass rounded-3xl p-5 md:p-10"
+>
+
+<div
+class="grid md:grid-cols-2 gap-8"
+>
+
+{% for skill in skills %}
+
+<div>
+
+<div
+class="flex justify-between mb-3"
+>
+
+<h3
+class="text-xl md:text-2xl font-bold text-cyan-400"
+>
+
+{{ skill.name }}
+
+</h3>
+
+<span
+class="text-cyan-300 font-bold"
+>
+
+{{ skill.level }}%
+
+</span>
+
+</div>
+
+<div
+class="w-full bg-slate-800 rounded-full h-3"
+>
+
+<div
+class="bg-cyan-400 h-3 rounded-full"
+style="width: {{ skill.level }}%;"
+>
+
+</div>
+
+</div>
+
+</div>
+
+{% endfor %}
+
+</div>
+
+</div>
+
+</section>
+
+
+
+<!-- PROJECTS -->
+
+<section
+id="projects"
+data-aos="fade-up"
+class="max-w-7xl mx-auto pt-24 pb-6 md:pt-28 md:pb-16 px-6 sm:px-10"
+>
+
+<h2
+class="text-3xl sm:text-5xl md:text-6xl font-bold text-cyan-400 mb-8"
+>
+
+Projects
+
+</h2>
+
+<div
+class="glass rounded-3xl p-5 md:p-8"
+>
+
+<input
+type="text"
+id="projectSearch"
+placeholder="Search Project..."
+class="bg-black border border-cyan-400/20 p-4 rounded-2xl text-white w-full mb-10"
+onkeyup="searchProjects()"
+>
+
+<div
+id="projectsGrid"
+class="space-y-6"
+>
+
+{% for project in projects %}
+
+<a
+href="/project/{{ project.slug }}"
+class="project-card block border-b border-cyan-400/10 pb-6 hover:bg-cyan-400/5 transition duration-300 rounded-xl px-4"
+data-name="{{ project.title }}"
+>
+
+<div
+class="flex gap-6 items-start"
+>
+
+<div
+class="text-cyan-400 text-2xl font-bold min-w-[60px]"
+>
+
+{{ "%02d"|format(loop.index) }}
+
+</div>
+
+<div class="flex-1">
+
+<h3
+class="text-2xl md:text-3xl font-bold text-cyan-400 mb-2"
+>
+
+{{ project.title }}
+
+</h3>
+
+<p
+class="text-gray-400 text-lg"
+>
+
+{{ project.short_description }}
+
+</p>
+
+</div>
+
+<div
+class="text-cyan-400 text-3xl"
+>
+
+➜
+
+</div>
+
+</div>
+
+</a>
+
+{% endfor %}
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- INTERNSHIPS -->
+
+<section
+id="internships"
+data-aos="fade-up"
+class="max-w-7xl mx-auto pt-24 pb-6 md:pt-28 md:pb-16 px-6 sm:px-10"
+>
+
+<h2
+class="text-3xl sm:text-5xl md:text-6xl font-bold text-cyan-400 mb-8"
+>
+Internships
+</h2>
+
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+
+{% for internship in internships %}
+
+<div
+class="glass rounded-3xl p-5 hover-card"
+>
+
+<h3
+class="text-2xl font-bold text-cyan-400 mb-4"
+>
+{{ internship.company.strip() }}
+</h3>
+
+<p
+class="text-gray-300 text-base leading-relaxed"
+>
+{{ internship.description.strip() }}
+</p>
+
+</div>
+
+{% endfor %}
+
+</div>
+
+</section>
+
+
+<!-- ACHIEVEMENTS -->
+
+<section
+id="achievements"
+data-aos="fade-up"
+class="max-w-7xl mx-auto pt-24 pb-6 md:pt-28 md:pb-16 px-6 sm:px-10"
+>
+
+<h2
+class="text-3xl sm:text-5xl md:text-6xl font-bold text-cyan-400 mb-8"
+>
+
+Achievements
+</h2>
+
+<div class="grid md:grid-cols-2 gap-8">
+
+{% for achievement in achievements %}
+
+<div
+class="glass rounded-3xl p-5 hover-card"
+>
+
+<h3 class="text-xl font-bold text-cyan-400 mb-2">
+{{ achievement.title }}
+</h3>
+
+<p class="text-gray-300">
+{{ achievement.description }}
+</p>
+
+</div>
+
+{% endfor %}
+
+</div>
+
+
+
+</section>
+
+
+<!-- CERTIFICATES -->
+
+<section
+id="certificates"
+data-aos="fade-up"
+class="max-w-7xl mx-auto pt-24 pb-6 md:pt-28 md:pb-16 px-6 sm:px-10"
+>
+
+<h2
+class="text-3xl sm:text-5xl md:text-6xl font-bold text-cyan-400 mb-8"
+>
+
+Certificates
+
+</h2>
+
+<div class="grid md:grid-cols-2 gap-8">
+
+{% for cert in certificates %}
+
+<div
+class="glass rounded-3xl p-5 hover-card"
+>
+
+<h3
+class="text-2xl md:text-3xl font-bold text-cyan-400 mb-4"
+>
+
+{{ cert.title }}
+
+</h3>
+
+<p
+class="text-gray-300 text-lg leading-relaxed mb-6"
+>
+
+{{ cert.description }}
+
+</p>
+
+{% if cert.file %}
+
+<a
+href="{{ url_for('static', filename=cert.file) }}"
+target="_blank"
+class="bg-cyan-400 text-black px-5 py-3 rounded-xl font-bold inline-block"
+>
+
+View Certificate
+
+</a>
+
+{% endif %}
+
+</div>
+
+{% endfor %}
+
+</div>
+
+</section>
+
+
+<section
+id="soft-skills"
+data-aos="fade-up"
+class="max-w-7xl mx-auto pt-24 pb-6 md:pt-28 md:pb-16 px-6 sm:px-10"
+>
+
+<h2
+class="text-3xl sm:text-5xl md:text-6xl font-bold text-cyan-400 mb-8"
+>
+Soft Skills
+</h2>
+
+<div
+class="glass rounded-3xl p-5 sm:p-8 hover-card"
+>
+
+{% for skill in soft_skills %}
+
+<div class="{% if not loop.last %}border-b border-cyan-400/10{% endif %} py-5">
+
+<div class="flex items-start gap-4">
+
+<span class="text-white text-xl mt-1">
+•
+</span>
+
+<p class="text-lg md:text-xl text-gray-300 leading-relaxed">
+{{ skill.name }}
+</p>
+
+</div>
+
+</div>
+
+{% endfor %}
+
+</div>
+
+</section>
+
+
+<section
+id="extra-curricular"
+data-aos="fade-up"
+class="max-w-7xl mx-auto pt-24 pb-6 md:pt-28 md:pb-16 px-6 sm:px-10"
+>
+
+<h2
+class="text-3xl sm:text-5xl md:text-6xl font-bold text-cyan-400 mb-8"
+>
+Co & Extra Curricular Activities
+</h2>
+
+<div
+class="glass rounded-3xl p-5 sm:p-8 hover-card"
+>
+
+{% for activity in extra_curricular %}
+
+<div class="{% if not loop.last %}border-b border-cyan-400/10{% endif %} py-5">
+
+<div class="flex items-start gap-4">
+
+<span class="text-white text-xl mt-1">
+•
+</span>
+
+<p class="text-lg md:text-xl text-gray-300 leading-relaxed">
+{{ activity.name }}
+</p>
+
+</div>
+
+</div>
+
+{% endfor %}
+
+</div>
+
+</section>
+
+<!-- EDUCATION -->
+
+<section
+id="education"
+data-aos="fade-up"
+class="max-w-7xl mx-auto pt-24 pb-6 md:pt-28 md:pb-16 px-6 sm:px-10"
+>
+
+<h2
+class="text-3xl sm:text-5xl md:text-6xl font-bold text-cyan-400 mb-8"
+>
+
+Education
+
+</h2>
+
+<div class="glass rounded-3xl p-5 sm:p-8">
+
+{% for edu in education %}
+
+<div class="mb-6 pb-6 border-b border-cyan-400/10">
+
+<div class="flex flex-col md:flex-row md:justify-between md:items-start gap-4 mb-4">
+
+<h3 class="text-2xl md:text-3xl font-bold text-cyan-400">
+
+{{ edu.qualification }}
+
+</h3>
+
+<span class="text-cyan-300 text-xl font-bold">
+
+{{ edu.duration }}
+
+</span>
+
+</div>
+
+<ul class="text-gray-300 text-lg md:text-xl space-y-2">
+
+<li>
+
+• {{ edu.institution }}
+
+</li>
+
+<li>
+
+• {{ edu.result }}
+
+</li>
+
+</ul>
+
+</div>
+
+{% endfor %}
+
+</div>
+
+</section>
+
+<!-- CONTACT -->
+
+<section
+id="contact"
+data-aos="fade-up"
+class="max-w-7xl mx-auto pt-24 pb-6 md:pt-28 md:pb-16 px-6 sm:px-10"
+>
+
+<div
+class="glass rounded-3xl p-5 sm:p-8 hover-card"
+data-aos="fade-up"
+>
+
+<h2 class="text-3xl sm:text-5xl md:text-6xl font-bold text-cyan-400 mb-6">
+Contact
+</h2>
+
+<div class="space-y-4 text-lg">
+
+<p class="flex items-center gap-3">
+<span>📧</span>
+<a
+href="mailto:{{ settings.email }}"
+class="text-cyan-400 underline hover:text-white transition"
+>
+{{ settings.email }}
+</a>
+</p>
+
+<p class="flex items-center gap-3">
+<span>📱</span>
+<a
+href="tel:{{ settings.phone }}"
+class="text-cyan-400 underline hover:text-white transition"
+>
+{{ settings.phone }}
+</a>
+</p>
+
+<p class="flex items-center gap-3">
+<span>🔗</span>
+<a
+href="{{ settings.github }}"
+target="_blank"
+class="text-cyan-400 hover:text-white transition"
+>
+GitHub
+</a>
+</p>
+
+<p class="flex items-center gap-3">
+<span>💼</span>
+<a
+href="{{ settings.linkedin }}"
+target="_blank"
+class="text-cyan-400 hover:text-white transition"
+>
+LinkedIn
+</a>
+</p>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- FOOTER -->
+
+<footer
+class="mt-16 py-12 text-center border-t border-cyan-400/10"
+>
+
+<div class="space-y-4">
+
+<h3 class="text-cyan-400 font-bold text-3xl">
+Thanks for Visiting
+</h3>
+
+<p class="text-gray-400 text-lg">
+Let's Build Something Amazing Together
+</p>
+
+<div class="w-24 h-1 bg-cyan-400 mx-auto rounded-full"></div>
+
+<p class="text-gray-500 text-sm">
+© NAVINESH P K - 2026
+</p>
+
+</div>
+
+</footer>
+
+<button
+id="topBtn"
+onclick="window.scrollTo({top:0,behavior:'smooth'})"
+class="fixed bottom-4 right-4 bg-cyan-400 text-black w-12 h-12 rounded-full font-bold hidden z-50 animate-pulse"
+>
+
+↑
+
+</button>
+
+<script>
+
+AOS.init({
+duration:700,
+once:true,
+offset:50,
+easing:"ease-out-cubic"
+});
+
+function toggleMenu(){
+
+document
+.getElementById("mobileNav")
+.classList.toggle("hidden");
+
+}
+
+function searchProjects(){
+
+let input =
+document
+.getElementById("projectSearch")
+.value
+.toLowerCase();
+
+let cards =
+document.querySelectorAll(".project-card");
+
+cards.forEach(card=>{
+
+let name =
+card
+.getAttribute("data-name")
+.toLowerCase();
+
+if(name.includes(input)){
+
+card.style.display = "block";
+
+}else{
+
+card.style.display = "none";
+
+}
+
+});
+
+}
+
+window.addEventListener(
+"scroll",
+function(){
+
+let btn =
+document.getElementById("topBtn");
+
+if(window.scrollY > 500){
+
+btn.classList.remove("hidden");
+
+}else{
+
+btn.classList.add("hidden");
+
+}
+
+}
+);
+
+
+
+const starCount =
+window.innerWidth < 768 ? 25 : 60;
+
+for(let i=0;i<starCount;i++){
+
+const star=document.createElement("div");
+
+star.classList.add("star");
+
+star.style.left=Math.random()*100+"vw";
+star.style.top=Math.random()*100+"vh";
+
+star.style.animationDuration=
+(2+Math.random()*4)+"s";
+
+star.style.animationDelay=
+Math.random()*5+"s";
+
+document.body.appendChild(star);
+
+}
+
+
+</script>
+
+</body>
+
+</html>

@@ -1,0 +1,12 @@
+{
+    "title": "IoT Backend-as-a-Service (BaaS) Platform",
+    "slug": "iot-backend-as-a-service-(baas)-platform",
+    "short_description": "Currently Working",
+    "full_description": " IoT Backend-as-a-Service (BaaS) Platform: Designed and developed a\r\nfully self-hosted, multi-tenant IoT Backend-as-a-Service platform supporting MQTT, HTTP,\r\nBLE, and custom LoRa communication protocols. Implemented real-time telemetry\r\nprocessing, WebSocket monitoring, event-driven microservices architecture, device\r\nauthentication, and PostgreSQL-based scalable data management using Dockerized\r\ndeployment",
+    "category": "Cloude",
+    "year": "2026",
+    "tech_stack": [
+        "Python/another"
+    ],
+    "gallery": []
+}

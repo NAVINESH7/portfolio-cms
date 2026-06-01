@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Edit Internship</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+
+<style>
+
+body{
+background:#020617;
+color:white;
+font-family:Arial;
+}
+
+.glass{
+background:rgba(255,255,255,0.04);
+border:1px solid rgba(255,255,255,0.08);
+backdrop-filter:blur(14px);
+}
+
+.input-box{
+background:black;
+border:1px solid rgba(34,211,238,0.15);
+outline:none;
+color:white;
+}
+
+.input-box:focus{
+border:1px solid #22d3ee;
+}
+
+</style>
+
+</head>
+
+<body class="min-h-screen flex items-center justify-center p-6">
+
+<div class="glass rounded-3xl p-10 w-full max-w-5xl">
+
+<h1 class="text-4xl font-bold text-cyan-400 mb-10">
+
+Edit Internship
+
+</h1>
+
+<form method="POST" class="space-y-6">
+
+<input
+type="text"
+name="company"
+value="{{ internship.company }}"
+placeholder="Company Name"
+required
+class="w-full input-box p-5 rounded-2xl"
+
+>
+
+<textarea
+name="description"
+rows="8"
+required
+class="w-full input-box p-5 rounded-2xl"
+>{{ internship.description }}</textarea>
+
+<div class="flex gap-4">
+
+<button
+type="submit"
+class="bg-cyan-400 text-black px-8 py-4 rounded-2xl font-bold"
+
+>
+
+Save Changes
+
+</button>
+
+<a
+href="/admin"
+class="bg-red-500 px-8 py-4 rounded-2xl font-bold"
+
+>
+
+Cancel
+
+</a>
+
+</div>
+
+</form>
+
+</div>
+
+</body>
+
+</html>
