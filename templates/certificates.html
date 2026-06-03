@@ -107,59 +107,68 @@ body{
         </h2>
 
     </div>
+<!-- CERTIFICATES -->
 
-    <!-- CERTIFICATES -->
+<div class="grid md:grid-cols-2 gap-6">
 
-    <div class="grid md:grid-cols-2 gap-6">
+    {% for certificate in certificates %}
 
-        {% for certificate in certificates %}
+    <div class="bg-slate-900 p-6 rounded-2xl card">
 
-        <div class="bg-slate-900 p-6 rounded-2xl card">
+        {% if certificate.image_url %}
 
-            <h2 class="text-2xl font-bold text-cyan-400 mb-3">
-                {{ certificate.title }}
-            </h2>
+        <img
+            src="{{ certificate.image_url }}"
+            class="w-full h-56 object-cover rounded-xl mb-4"
+            alt="{{ certificate.title }}"
+        >
 
-            <p class="text-gray-400 mb-5">
-                {{ certificate.description }}
-            </p>
+        {% endif %}
 
-            <div class="flex flex-wrap gap-3">
+        <h2 class="text-2xl font-bold text-cyan-400 mb-3">
+            {{ certificate.title }}
+        </h2>
 
-                {% if certificate.file %}
+        <p class="text-gray-400 mb-5">
+            {{ certificate.description }}
+        </p>
 
-                <a
-                href="{{ url_for('static', filename=certificate.file) }}"
+        <div class="flex flex-wrap gap-3">
+
+            {% if certificate.image_url %}
+
+            <a
+                href="{{ certificate.image_url }}"
                 target="_blank"
                 class="bg-green-500 hover:bg-green-400 text-black px-4 py-2 rounded-lg font-bold"
-                >
-                    View
-                </a>
+            >
+                View
+            </a>
 
-                {% endif %}
+            {% endif %}
 
-                <a
-                href="/edit-certificate/{{ loop.index0 }}"
+            <a
+                href="/edit-certificate/{{ certificate.id }}"
                 class="bg-yellow-500 hover:bg-yellow-400 text-black px-4 py-2 rounded-lg font-bold"
-                >
-                    Edit
-                </a>
+            >
+                Edit
+            </a>
 
-                <a
-                href="/delete-certificate/{{ loop.index0 }}"
+            <a
+                href="/delete-certificate/{{ certificate.id }}"
                 onclick="return confirm('Delete this certificate?')"
                 class="bg-red-500 hover:bg-red-400 px-4 py-2 rounded-lg font-bold"
-                >
-                    Delete
-                </a>
-
-            </div>
+            >
+                Delete
+            </a>
 
         </div>
 
-        {% endfor %}
-
     </div>
+
+    {% endfor %}
+
+</div>
 
 </div>
 

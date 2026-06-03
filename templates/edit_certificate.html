@@ -82,21 +82,21 @@ class="w-full bg-slate-800 p-4 rounded-xl"
 
 </div>
 
-{% if certificate.file %}
+
+{% if certificate.image_url %}
 
 <div class="mb-6">
 
-<a
-href="{{ url_for('static', filename=certificate.file) }}"
-target="_blank"
-class="bg-green-500 text-black px-4 py-2 rounded-xl font-bold"
+<img
+src="{{ certificate.image_url }}"
+class="max-w-sm rounded-xl border border-slate-700"
 >
-View Current Certificate
-</a>
 
 </div>
 
 {% endif %}
+
+<div class="flex flex-wrap gap-4 mt-6">
 
 <button
 type="submit"
@@ -104,6 +104,19 @@ class="bg-cyan-500 text-black px-6 py-3 rounded-xl font-bold"
 >
 Save Changes
 </button>
+
+<a
+href="/delete-certificate-image/{{ certificate.id }}"
+onclick="return confirm('Delete certificate image?')"
+class="bg-orange-500 hover:bg-orange-400 text-white px-6 py-3 rounded-xl font-bold"
+>
+Delete Image
+</a>
+
+</div>
+
+</div>
+
 
 </form>
 

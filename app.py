@@ -21,6 +21,8 @@ load_dotenv()
 
 app = Flask(__name__)
 
+
+
 app.secret_key = os.getenv("SECRET_KEY")
 
 ADMIN_USERNAME = os.getenv("ADMIN_USERNAME")
@@ -48,35 +50,55 @@ os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 def load_settings():
 
-    if os.path.exists("settings.json"):
+    try:
 
-        try:
+        result = (
+            supabase
+            .table("settings")
+            .select("*")
+            .execute()
+        )
 
-            with open("settings.json", "r") as file:
+        settings = {}
 
-                return json.load(file)
+        for row in result.data:
 
-        except:
+            settings[row["key"]] = row["value"]
 
-            pass
+        return settings
 
-    return {
-        "hero_title": "NAVINESH P K",
-        "hero_subtitle": "Portfolio Website",
-        "about_text": "About Me",
-        "email": "",
-        "phone": "",
-        "github": "",
-        "linkedin": "",
-        "resume": ""
-    }
+    except Exception as e:
+
+        print(
+            "SETTINGS LOAD ERROR:",
+            e
+        )
+
+        return {}
 
 
 def save_settings(settings):
 
-    with open("settings.json", "w") as file:
+    try:
 
-        json.dump(settings, file, indent=4)
+        for key, value in settings.items():
+
+            supabase.table(
+                "settings"
+            ).upsert({
+
+                "key": key,
+                "value": value
+
+            }).execute()
+
+    except Exception as e:
+
+        print(
+            "SAVE SETTINGS ERROR:",
+            e
+        )
+
 
 
 
@@ -235,19 +257,44 @@ def save_education(education):
 
 def load_certificates():
 
-    if os.path.exists("certificates.json"):
+    try:
 
-        try:
+        result = (
+            supabase
+            .table("certificates")
+            .select("*")
+            .order("id")
+            .execute()
+        )
 
-            with open("certificates.json", "r") as file:
+        certificates = result.data
 
-                return json.load(file)
+        for cert in certificates:
 
-        except:
+            if cert.get("image_name"):
 
-            pass
+                cert["image_url"] = (
+                    supabase.storage
+                    .from_("certificate-files")
+                    .get_public_url(
+                        cert["image_name"]
+                    )
+                )
 
-    return []
+            else:
+
+                cert["image_url"] = ""
+
+        return certificates
+
+    except Exception as e:
+
+        print(
+            "CERTIFICATES LOAD ERROR:",
+            e
+        )
+
+        return []
 
 
 def save_certificates(certificates):
@@ -797,12 +844,11 @@ def update_settings():
 def upload_resume():
 
     if not session.get("admin"):
-
         return redirect("/login")
 
     file = request.files.get("resume")
 
-    if file and file.filename != "":
+    if file and file.filename:
 
         settings = load_settings()
 
@@ -810,73 +856,89 @@ def upload_resume():
 
         if old_resume:
 
-            old_path = os.path.join(
-                "static",
-                old_resume
+            try:
+
+                supabase.storage \
+                    .from_("resume-files") \
+                    .remove([old_resume])
+
+            except Exception as e:
+
+                print(
+                    "DELETE OLD RESUME ERROR:",
+                    e
+                )
+
+        filename = (
+            f"{int(datetime.now().timestamp())}_"
+            f"{secure_filename(file.filename)}"
+        )
+
+        file_bytes = file.read()
+
+        supabase.storage \
+            .from_("resume-files") \
+            .upload(
+                filename,
+                file_bytes,
+                {
+                    "content-type":
+                    file.content_type
+                }
             )
 
-            if os.path.exists(old_path):
-
-                os.remove(old_path)
-
-        filename = secure_filename(
-            file.filename
-        )
-
-        save_path = os.path.join(
-            UPLOAD_FOLDER,
-            filename
-        )
-
-        file.save(save_path)
-
-        settings["resume"] = (
-            f"uploads/{filename}"
-        )
+        settings["resume"] = filename
 
         save_settings(settings)
 
     return redirect("/admin")
+
+
 
 @app.route("/download-resume")
 def download_resume():
 
     settings = load_settings()
 
-    if not settings.get("resume"):
+    filename = settings.get("resume")
+
+    if not filename:
 
         return redirect("/admin")
 
-    path = os.path.join(
-        "static",
-        settings["resume"]
+    resume_url = (
+        supabase.storage
+        .from_("resume-files")
+        .get_public_url(filename)
     )
 
-    return send_file(
-        path,
-        as_attachment=True
-    )
+    return redirect(resume_url)
 
 
 @app.route("/delete-resume")
 def delete_resume():
 
     if not session.get("admin"):
-
         return redirect("/login")
 
     settings = load_settings()
 
-    if settings.get("resume"):
+    filename = settings.get("resume")
 
-        path = os.path.join(
-            "static",
-            settings["resume"]
-        )
+    if filename:
 
-        if os.path.exists(path):
+        try:
 
-            os.remove(path)
+            supabase.storage \
+                .from_("resume-files") \
+                .remove([filename])
+
+        except Exception as e:
+
+            print(
+                "DELETE RESUME ERROR:",
+                e
+            )
 
     settings["resume"] = ""
 
@@ -1464,7 +1526,6 @@ def add_achievement():
 # ==================================================
 # ADD CERTIFICATE
 # ==================================================
-
 @app.route(
     "/add-certificate",
     methods=["POST"]
@@ -1474,28 +1535,33 @@ def add_certificate():
     if not session.get("admin"):
         return redirect("/login")
 
-    certificates = load_certificates()
-
     file = request.files.get("file")
 
-    filename = ""
+    image_name = ""
 
-    if file and file.filename != "":
+    if file and file.filename:
 
-        filename = (
-            str(int(datetime.now().timestamp()))
-            + "_"
-            + secure_filename(file.filename)
+        image_name = (
+            f"{int(datetime.now().timestamp())}_"
+            f"{secure_filename(file.filename)}"
         )
 
-        file.save(
-            os.path.join(
-                CERTIFICATE_FOLDER,
-                filename
+        file_bytes = file.read()
+
+        supabase.storage \
+            .from_("certificate-files") \
+            .upload(
+                image_name,
+                file_bytes,
+                {
+                    "content-type":
+                    file.content_type
+                }
             )
-        )
 
-    certificates.append({
+    supabase.table(
+        "certificates"
+    ).insert({
 
         "title":
         request.form.get("title"),
@@ -1503,134 +1569,221 @@ def add_certificate():
         "description":
         request.form.get("description"),
 
-        "file":
-        f"certificates/{filename}"
+        "image_name":
+        image_name
 
-    })
-
-    save_certificates(certificates)
+    }).execute()
 
     return redirect("/certificates")
 
 # ==================================================
 # EDIT CERTIFICATE
 # ==================================================
-
 @app.route(
-    "/edit-certificate/<int:index>",
+    "/edit-certificate/<int:certificate_id>",
     methods=["GET", "POST"]
 )
-def edit_certificate(index):
+def edit_certificate(certificate_id):
 
     if not session.get("admin"):
         return redirect("/login")
 
     certificates = load_certificates()
 
-    if index < 0 or index >= len(certificates):
+    certificate = next(
+        (
+            c for c in certificates
+            if c["id"] == certificate_id
+        ),
+        None
+    )
+
+    if not certificate:
         return redirect("/certificates")
 
     if request.method == "POST":
 
-        certificates[index]["title"] = request.form.get(
-            "title"
-        )
+        try:
 
-        certificates[index]["description"] = request.form.get(
-            "description"
-        )
+            update_data = {
 
-        file = request.files.get("file")
+                "title":
+                request.form.get("title"),
 
-        if file and file.filename != "":
+                "description":
+                request.form.get("description")
 
-            old_file = certificates[index].get(
-                "file",
-                ""
-            )
+            }
 
-            if old_file:
+            file = request.files.get("file")
 
-                old_path = os.path.join(
-                    "static",
-                    old_file
+            if file and file.filename:
+
+                if certificate.get("image_name"):
+
+                    supabase.storage \
+                        .from_("certificate-files") \
+                        .remove([
+                            certificate["image_name"]
+                        ])
+
+                image_name = (
+                    f"{int(datetime.now().timestamp())}_"
+                    f"{secure_filename(file.filename)}"
                 )
 
-                if os.path.exists(old_path):
+                file_bytes = file.read()
 
-                    os.remove(old_path)
+                supabase.storage \
+                    .from_("certificate-files") \
+                    .upload(
+                        image_name,
+                        file_bytes,
+                        {
+                            "content-type":
+                            file.content_type
+                        }
+                    )
 
-            filename = (
-                str(int(datetime.now().timestamp()))
-                + "_"
-                + secure_filename(file.filename)
+                update_data["image_name"] = image_name
+
+            supabase.table(
+                "certificates"
+            ).update(
+                update_data
+            ).eq(
+                "id",
+                certificate_id
+            ).execute()
+
+        except Exception as e:
+
+            print(
+                "EDIT CERTIFICATE ERROR:",
+                e
             )
-
-            file.save(
-                os.path.join(
-                    CERTIFICATE_FOLDER,
-                    filename
-                )
-            )
-
-            certificates[index]["file"] = (
-                f"certificates/{filename}"
-            )
-
-        save_certificates(certificates)
 
         return redirect("/certificates")
 
     return render_template(
         "edit_certificate.html",
-        certificate=certificates[index]
+        certificate=certificate
     )
 
+
 # ==================================================
-# DELETE CERTIFICATE
+# DELETE CERTIFICATE IMAGE
 # ==================================================
 
-@app.route("/delete-certificate/<int:index>")
-def delete_certificate(index):
+@app.route(
+    "/delete-certificate-image/<int:certificate_id>"
+)
+def delete_certificate_image(certificate_id):
 
     if not session.get("admin"):
         return redirect("/login")
 
-    certificates = load_certificates()
+    try:
 
-    if 0 <= index < len(certificates):
+        result = (
+            supabase
+            .table("certificates")
+            .select("*")
+            .eq("id", certificate_id)
+            .single()
+            .execute()
+        )
 
-        certificate = certificates[index]
+        certificate = result.data
 
-        # Get file path
-        file_path = certificate.get("file", "")
+        if certificate and certificate.get("image_name"):
 
-        # Delete uploaded file from static/certificates
-        if file_path:
+            filename = certificate["image_name"]
 
-            full_path = os.path.join(
-                "static",
-                file_path
-            )
+            supabase.storage \
+                .from_("certificate-files") \
+                .remove([filename])
 
-            
-            try:
+            supabase.table(
+                "certificates"
+            ).update({
 
-                if os.path.exists(full_path):
+                "image_name": ""
 
-                    os.remove(full_path)
+            }).eq(
+                "id",
+                certificate_id
+            ).execute()
 
-            except Exception as e:
+    except Exception as e:
 
-                print("FILE DELETE ERROR:", e)
+        print(
+            "DELETE CERTIFICATE IMAGE ERROR:",
+            e
+        )
 
-        # Remove certificate from JSON
-        certificates.pop(index)
+    return redirect(
+        f"/edit-certificate/{certificate_id}"
+    )
 
-        save_certificates(certificates)
+
+# ==================================================
+# DELETE CERTIFICATE
+# ==================================================
+@app.route("/delete-certificate/<int:certificate_id>")
+def delete_certificate(certificate_id):
+
+    if not session.get("admin"):
+        return redirect("/login")
+
+    try:
+
+        print("Deleting certificate:", certificate_id)
+
+        result = (
+            supabase
+            .table("certificates")
+            .select("*")
+            .eq("id", certificate_id)
+            .execute()
+        )
+
+        print("Result:", result.data)
+
+        if result.data:
+
+            certificate = result.data[0]
+
+            if certificate.get("image_name"):
+
+                print(
+                    "Deleting image:",
+                    certificate["image_name"]
+                )
+
+                supabase.storage \
+                    .from_("certificate-files") \
+                    .remove([
+                        certificate["image_name"]
+                    ])
+
+        supabase.table(
+            "certificates"
+        ).delete().eq(
+            "id",
+            certificate_id
+        ).execute()
+
+        print("Certificate deleted")
+
+    except Exception as e:
+
+        print(
+            "DELETE CERTIFICATE ERROR:",
+            str(e)
+        )
 
     return redirect("/certificates")
-
 
 # ==================================================
 # CREATE PROJECT
