@@ -125,29 +125,60 @@ Gallery
 
 <div
     id="lightbox"
-    class="fixed inset-0 bg-black/90 hidden items-center justify-center z-50"
-    onclick="closeImage()"
+    class="fixed inset-0 bg-black/95 hidden items-center justify-center z-50"
 >
 
-    <span
-        class="absolute top-6 right-8 text-white text-5xl cursor-pointer"
+    <button
+        onclick="prevImage()"
+        class="absolute left-4 md:left-8 text-white text-5xl font-bold"
     >
-        &times;
-    </span>
+        &#10094;
+    </button>
 
     <img
-    id="lightbox-image"
-    class="max-w-[95%] max-h-[90vh] object-contain rounded-2xl"
-    onclick="event.stopPropagation()"
->
+        id="lightbox-image"
+        class="max-w-[95%] max-h-[85vh] object-contain rounded-2xl"
+    >
+
+    <button
+        onclick="nextImage()"
+        class="absolute right-4 md:right-8 text-white text-5xl font-bold"
+    >
+        &#10095;
+    </button>
+
+    <button
+        onclick="closeImage()"
+        class="absolute top-4 right-6 text-white text-5xl"
+    >
+        &times;
+    </button>
+
+    <div
+        id="image-counter"
+        class="absolute bottom-6 text-white text-lg"
+    >
+    </div>
 
 </div>
 
 <script>
 
-function openImage(src)
+const galleryImages = [
+{% for image in project.gallery %}
+"{{ image }}",
+{% endfor %}
+];
+
+let currentImageIndex = 0;
+
+function openImage(imageUrl)
 {
-    document.getElementById("lightbox-image").src = src;
+    currentImageIndex = galleryImages.indexOf(imageUrl);
+
+    document.getElementById("lightbox-image").src = imageUrl;
+
+    updateCounter();
 
     document.getElementById("lightbox")
         .classList.remove("hidden");
@@ -164,6 +195,98 @@ function closeImage()
     document.getElementById("lightbox")
         .classList.add("hidden");
 }
+
+function nextImage()
+{
+    currentImageIndex++;
+
+    if(currentImageIndex >= galleryImages.length)
+    {
+        currentImageIndex = 0;
+    }
+
+    document.getElementById("lightbox-image").src =
+        galleryImages[currentImageIndex];
+
+    updateCounter();
+}
+
+function prevImage()
+{
+    currentImageIndex--;
+
+    if(currentImageIndex < 0)
+    {
+        currentImageIndex =
+            galleryImages.length - 1;
+    }
+
+    document.getElementById("lightbox-image").src =
+        galleryImages[currentImageIndex];
+
+    updateCounter();
+}
+
+function updateCounter()
+{
+    document.getElementById("image-counter").innerText =
+        (currentImageIndex + 1) +
+        " / " +
+        galleryImages.length;
+}
+
+document.addEventListener(
+    "keydown",
+    function(event)
+    {
+        if(event.key === "ArrowRight")
+        {
+            nextImage();
+        }
+
+        if(event.key === "ArrowLeft")
+        {
+            prevImage();
+        }
+
+        if(event.key === "Escape")
+        {
+            closeImage();
+        }
+    }
+);
+
+let touchStartX = 0;
+
+document.getElementById("lightbox")
+.addEventListener(
+    "touchstart",
+    function(e)
+    {
+        touchStartX =
+            e.changedTouches[0].screenX;
+    }
+);
+
+document.getElementById("lightbox")
+.addEventListener(
+    "touchend",
+    function(e)
+    {
+        let touchEndX =
+            e.changedTouches[0].screenX;
+
+        if(touchEndX < touchStartX - 50)
+        {
+            nextImage();
+        }
+
+        if(touchEndX > touchStartX + 50)
+        {
+            prevImage();
+        }
+    }
+);
 
 </script>
 
