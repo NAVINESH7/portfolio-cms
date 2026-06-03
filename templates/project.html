@@ -126,29 +126,31 @@ Gallery
 <div
     id="lightbox"
     class="fixed inset-0 bg-black/95 hidden items-center justify-center z-50"
+    onclick="closeImage()"
+>
+
+<button
+    onclick="event.stopPropagation(); nextImage();"
+    class="absolute right-6 top-1/2 -translate-y-1/2 z-[60] bg-black/70 rounded-full w-16 h-16 flex items-center justify-center text-white text-4xl font-bold"
+>
+    &#10095;
+</button>
+
+    <img
+    id="lightbox-image"
+    class="max-w-[80%] max-h-[80vh] object-contain rounded-2xl"
+    onclick="event.stopPropagation()"
 >
 
     <button
-        onclick="prevImage()"
-        class="absolute left-4 md:left-8 text-white text-5xl font-bold"
-    >
-        &#10094;
-    </button>
-
-    <img
-        id="lightbox-image"
-        class="max-w-[95%] max-h-[85vh] object-contain rounded-2xl"
-    >
-
-    <button
-        onclick="nextImage()"
+        onclick="event.stopPropagation(); nextImage();"
         class="absolute right-4 md:right-8 text-white text-5xl font-bold"
     >
         &#10095;
     </button>
 
     <button
-        onclick="closeImage()"
+        onclick="event.stopPropagation(); closeImage();"
         class="absolute top-4 right-6 text-white text-5xl"
     >
         &times;
