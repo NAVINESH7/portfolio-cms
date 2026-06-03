@@ -483,30 +483,43 @@ def load_projects():
             if project.get("tech_stack"):
 
                 project["tech_stack"] = [
-
                     tech.strip()
-
                     for tech in project["tech_stack"].split(",")
-
                 ]
 
             else:
-
                 project["tech_stack"] = []
 
-            project["gallery"] = []
+            gallery_result = (
+                supabase
+                .table("project_images")
+                .select("*")
+                .eq("project_id", project["id"])
+                .execute()
+            )
+
+            gallery = []
+
+            for image in gallery_result.data:
+
+                image_url = (
+                    supabase.storage
+                    .from_("project-gallery")
+                    .get_public_url(image["image_name"])
+                )
+
+                gallery.append(image_url)
+
+            project["gallery"] = gallery
 
         return projects
 
     except Exception as e:
 
-        print(
-            "PROJECT LOAD ERROR:",
-            e
-        )
+        print("PROJECT LOAD ERROR:", e)
 
         return []
-
+    
 # ==================================================
 # HOME
 # ==================================================
@@ -1804,7 +1817,6 @@ def edit_project(slug):
 # ==================================================
 # UPLOAD PROJECT IMAGES
 # ==================================================
-
 @app.route(
     "/upload-project-images/<slug>",
     methods=["POST"]
@@ -1814,39 +1826,49 @@ def upload_project_images(slug):
     if not session.get("admin"):
         return redirect("/login")
 
-    project_folder = os.path.join(
-        PROJECTS_FOLDER,
-        slug
+    projects = load_projects()
+
+    project = next(
+        (
+            p for p in projects
+            if p["slug"] == slug
+        ),
+        None
     )
 
-    gallery_folder = os.path.join(
-        project_folder,
-        "gallery"
-    )
+    if not project:
+        return redirect("/projects")
 
-    os.makedirs(
-        gallery_folder,
-        exist_ok=True
-    )
-
-    files = request.files.getlist(
-        "images"
-    )
+    files = request.files.getlist("images")
 
     for file in files:
 
-        if file.filename != "":
+        if file and file.filename:
 
-            filename = secure_filename(
-                file.filename
+            filename = (
+                f"{project['id']}_"
+                f"{int(datetime.now().timestamp())}_"
+                f"{secure_filename(file.filename)}"
             )
 
-            save_path = os.path.join(
-                gallery_folder,
-                filename
-            )
+            file_bytes = file.read()
 
-            file.save(save_path)
+            supabase.storage \
+                .from_("project-gallery") \
+                .upload(
+                    filename,
+                    file_bytes,
+                    {"content-type": file.content_type}
+                )
+
+            supabase.table(
+                "project_images"
+            ).insert({
+
+                "project_id": project["id"],
+                "image_name": filename
+
+            }).execute()
 
     return redirect(
         f"/edit-project/{slug}"
@@ -1867,21 +1889,29 @@ def delete_project_image(
     if not session.get("admin"):
         return redirect("/login")
 
-    image_path = os.path.join(
-        PROJECTS_FOLDER,
-        slug,
-        "gallery",
-        filename
-    )
+    try:
 
-    if os.path.exists(image_path):
+        supabase.storage \
+            .from_("project-gallery") \
+            .remove([filename])
 
-        os.remove(image_path)
+        supabase.table(
+            "project_images"
+        ).delete().eq(
+            "image_name",
+            filename
+        ).execute()
+
+    except Exception as e:
+
+        print(
+            "DELETE IMAGE ERROR:",
+            e
+        )
 
     return redirect(
         f"/edit-project/{slug}"
     )
-
 
 # ==================================================
 # PROJECT GALLERY IMAGE
