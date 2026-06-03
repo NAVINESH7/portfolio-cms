@@ -105,12 +105,16 @@ Gallery
 
 {% for image in project.gallery %}
 
-<img
-src="{{ image }}"
-class="rounded-2xl w-full"
-loading="lazy"
-alt="{{ project.title }}"
->
+<a href="{{ image }}" target="_blank">
+
+    <img
+        src="{{ image }}"
+        class="rounded-2xl w-full hover:scale-105 transition duration-300 cursor-pointer"
+        loading="lazy"
+        alt="{{ project.title }}"
+    >
+
+</a>
 
 {% endfor %}
 
