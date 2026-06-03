@@ -130,24 +130,24 @@ Gallery
 >
 
 <button
-    onclick="event.stopPropagation(); nextImage();"
-    class="absolute right-6 top-1/2 -translate-y-1/2 z-[60] bg-black/70 rounded-full w-16 h-16 flex items-center justify-center text-white text-4xl font-bold"
+    onclick="event.stopPropagation(); prevImage();"
+    class="absolute left-6 top-1/2 -translate-y-1/2 z-[60] bg-black/70 rounded-full w-16 h-16 flex items-center justify-center text-white text-4xl font-bold"
 >
-    &#10095;
+    &#10094;
 </button>
 
-    <img
+<img
     id="lightbox-image"
     class="max-w-[80%] max-h-[80vh] object-contain rounded-2xl"
     onclick="event.stopPropagation()"
 >
 
-    <button
-        onclick="event.stopPropagation(); nextImage();"
-        class="absolute right-4 md:right-8 text-white text-5xl font-bold"
-    >
-        &#10095;
-    </button>
+<button
+    onclick="event.stopPropagation(); nextImage();"
+    class="absolute right-6 top-1/2 -translate-y-1/2 z-[60] bg-black/70 rounded-full w-16 h-16 flex items-center justify-center text-white text-4xl font-bold"
+>
+    &#10095;
+</button>
 
     <button
         onclick="event.stopPropagation(); closeImage();"
