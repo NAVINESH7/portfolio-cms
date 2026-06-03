@@ -1,20 +1,12 @@
 [
     {
-        "qualification": "Secondary School Leaving Certificate (SSLC)",
-        "institution": "Sri S.R.V Matric.Hr.sec.School, Narasingapuram, Attur.",
-        "duration": "2021",
-        "result": "PASS "
-    },
-    {
-        "qualification": "Higher Secondary Certificate (HSC)",
-        "institution": "Sri S.R.V Matric.Hr.sec.School, Narasingapuram, Attur.",
-        "duration": "2021-2023",
-        "result": "71.5%"
-    },
-    {
-        "qualification": "B.E. Electronics and Communication Engineering",
-        "institution": "K.S. Rangasamy College of Technology, Tiruchengode",
-        "duration": "2023-2027",
-        "result": "7.32(up to 5th Semester)"
+        "id": 1,
+        "degree": "wwbb",
+        "institution": "kl",
+        "year": "88888",
+        "cgpa": "23",
+        "qualification": "adfgh",
+        "duration": "2006",
+        "result": "90"
     }
 ]

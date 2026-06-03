@@ -1,3 +1,4 @@
+from supabase_client import supabase
 from dotenv import load_dotenv
 from flask import (
     Flask,
@@ -16,6 +17,7 @@ from datetime import datetime
 from werkzeug.utils import secure_filename
 
 load_dotenv()
+
 
 app = Flask(__name__)
 
@@ -76,39 +78,7 @@ def save_settings(settings):
 
         json.dump(settings, file, indent=4)
 
-# ==================================================
-# SAVE PROJECT
-# ==================================================
 
-def save_project(project):
-
-    slug = project["slug"]
-
-    project_folder = os.path.join(
-        PROJECTS_FOLDER,
-        slug
-    )
-
-    os.makedirs(
-        project_folder,
-        exist_ok=True
-    )
-
-    json_file = os.path.join(
-        project_folder,
-        "project.json"
-    )
-
-    with open(
-        json_file,
-        "w"
-    ) as file:
-
-        json.dump(
-            project,
-            file,
-            indent=4
-        )
 
 # ==================================================
 # SKILLS
@@ -116,26 +86,37 @@ def save_project(project):
 
 def load_skills():
 
-    if os.path.exists("skills.json"):
+    try:
 
-        try:
+        result = (
+            supabase
+            .table("skills")
+            .select("*")
+            .order("id")
+            .execute()
+        )
 
-            with open("skills.json", "r") as file:
+        return result.data
 
-                return json.load(file)
+    except Exception as e:
 
-        except:
+        print(
+            "SKILLS LOAD ERROR:",
+            e
+        )
 
-            pass
-
-    return []
+        return []
 
 
 def save_skills(skills):
 
     with open("skills.json", "w") as file:
 
-        json.dump(skills, file, indent=4)
+        json.dump(
+            skills,
+            file,
+            indent=4
+        )
 
 # ==================================================
 # SOFT SKILLS
@@ -143,19 +124,23 @@ def save_skills(skills):
 
 def load_soft_skills():
 
-    if os.path.exists("soft_skills.json"):
+    try:
 
-        try:
+        result = (
+            supabase
+            .table("soft_skills")
+            .select("*")
+            .order("id")
+            .execute()
+        )
 
-            with open("soft_skills.json", "r") as file:
+        return result.data
 
-                return json.load(file)
+    except Exception as e:
 
-        except:
+        print("SOFT SKILLS LOAD ERROR:", e)
 
-            pass
-
-    return []
+        return []
 
 
 def save_soft_skills(soft_skills):
@@ -174,19 +159,26 @@ def save_soft_skills(soft_skills):
 
 def load_extra_curricular():
 
-    if os.path.exists("extra_curricular.json"):
+    try:
 
-        try:
+        result = (
+            supabase
+            .table("extra_curricular")
+            .select("*")
+            .order("id")
+            .execute()
+        )
 
-            with open("extra_curricular.json", "r") as file:
+        return result.data
 
-                return json.load(file)
+    except Exception as e:
 
-        except:
+        print(
+            "EXTRA CURRICULAR LOAD ERROR:",
+            e
+        )
 
-            pass
-
-    return []
+        return []
 
 
 def save_extra_curricular(extra_curricular):
@@ -205,19 +197,26 @@ def save_extra_curricular(extra_curricular):
 
 def load_education():
 
-    if os.path.exists("education.json"):
+    try:
 
-        try:
+        result = (
+            supabase
+            .table("education")
+            .select("*")
+            .order("id")
+            .execute()
+        )
 
-            with open("education.json", "r") as file:
+        return result.data
 
-                return json.load(file)
+    except Exception as e:
 
-        except:
+        print(
+            "EDUCATION LOAD ERROR:",
+            e
+        )
 
-            pass
-
-    return []
+        return []
 
 
 def save_education(education):
@@ -270,31 +269,26 @@ def save_certificates(certificates):
 
 def load_internships():
 
-    if os.path.exists("internships.json"):
+    try:
 
-        try:
-
-            with open("internships.json", "r") as file:
-
-                return json.load(file)
-
-        except:
-
-            pass
-
-    return []
-
-
-def save_internships(internships):
-
-    with open("internships.json", "w") as file:
-
-        json.dump(
-            internships,
-            file,
-            indent=4
+        result = (
+            supabase
+            .table("internships")
+            .select("*")
+            .order("id")
+            .execute()
         )
 
+        return result.data
+
+    except Exception as e:
+
+        print(
+            "INTERNSHIP LOAD ERROR:",
+            e
+        )
+
+        return []
 
 # ==================================================
 # ACHIEVEMENTS
@@ -466,78 +460,52 @@ def get_visitor_stats():
 
     }
 
-
 # ==================================================
 # PROJECTS
 # ==================================================
 
 def load_projects():
 
-    projects = []
+    try:
 
-    if not os.path.exists(PROJECTS_FOLDER):
+        result = (
+            supabase
+            .table("projects")
+            .select("*")
+            .order("id")
+            .execute()
+        )
+
+        projects = result.data
+
+        for project in projects:
+
+            if project.get("tech_stack"):
+
+                project["tech_stack"] = [
+
+                    tech.strip()
+
+                    for tech in project["tech_stack"].split(",")
+
+                ]
+
+            else:
+
+                project["tech_stack"] = []
+
+            project["gallery"] = []
 
         return projects
 
-    for folder in os.listdir(PROJECTS_FOLDER):
+    except Exception as e:
 
-        project_folder = os.path.join(
-            PROJECTS_FOLDER,
-            folder
+        print(
+            "PROJECT LOAD ERROR:",
+            e
         )
 
-        if os.path.isdir(project_folder):
-
-            json_file = os.path.join(
-                project_folder,
-                "project.json"
-            )
-
-            if os.path.exists(json_file):
-
-                try:
-
-                    with open(json_file, "r") as file:
-
-                        project = json.load(file)
-
-                        # SAFE DEFAULTS
-
-                        gallery_folder = os.path.join(
-                            project_folder,
-                            "gallery"
-                        )
-
-                        gallery = []
-
-                        if os.path.exists(gallery_folder):
-
-                            for image in os.listdir(
-                                gallery_folder
-                            ):
-
-                                gallery.append(
-                                    f"/projects/{project['slug']}/gallery/{image}"
-                                )
-
-                        project["gallery"] = gallery
-
-                        if "gallery" not in project:
-                            project["gallery"] = []
-
-                        if "tech_stack" not in project:
-                            project["tech_stack"] = []
-
-                        projects.append(project)
-
-                except Exception as e:
-
-                    print(
-                        "PROJECT ERROR:",
-                        e
-                    )
-
-    return projects
+        return []
 
 # ==================================================
 # HOME
@@ -689,6 +657,7 @@ def education_page():
     if not session.get("admin"):
         return redirect("/login")
 
+    
     return render_template(
         "education.html",
         education=load_education()
@@ -913,20 +882,26 @@ def add_skill():
 
         return redirect("/login")
 
-    skills = load_skills()
+    try:
 
-    skills.append({
+        supabase.table("skills").insert({
 
-        "name":
-        request.form.get("name"),
+            "name": request.form.get("name"),
 
-        "level":
-        request.form.get("level")
-    })
+            "level": int(
+                request.form.get("level")
+            )
 
-    save_skills(skills)
+        }).execute()
+
+    except Exception as e:
+
+        print(
+            "ADD SKILL ERROR:",
+            e
+        )
+
     return redirect("/skills")
-
 
 # ==================================================
 # DELETE SKILL
@@ -936,17 +911,18 @@ def add_skill():
 def delete_skill(name):
 
     if not session.get("admin"):
-
         return redirect("/login")
 
-    skills = load_skills()
+    try:
 
-    skills = [
-        skill for skill in skills
-        if skill["name"] != name
-    ]
+        supabase.table("skills") \
+            .delete() \
+            .eq("name", name) \
+            .execute()
 
-    save_skills(skills)
+    except Exception as e:
+
+        print("DELETE SKILL ERROR:", e)
 
     return redirect("/skills")
 
@@ -964,37 +940,60 @@ def add_soft_skill():
 
         return redirect("/login")
 
-    soft_skills = load_soft_skills()
+    try:
 
-    soft_skills.append({
+        supabase.table(
+            "soft_skills"
+        ).insert({
 
-        "name":
-        request.form.get("name")
+            "skill":
+            request.form.get("name")
 
-    })
+        }).execute()
 
-    save_soft_skills(soft_skills)
+    except Exception as e:
+
+        print(
+            "ADD SOFT SKILL ERROR:",
+            e
+        )
 
     return redirect("/soft-skills")
 
 @app.route(
     "/delete-soft-skill/<int:index>"
 )
+
+
 def delete_soft_skill(index):
 
     if not session.get("admin"):
 
         return redirect("/login")
 
-    soft_skills = load_soft_skills()
+    skills = load_soft_skills()
 
-    if 0 <= index < len(soft_skills):
+    if 0 <= index < len(skills):
 
-        soft_skills.pop(index)
+        try:
 
-        save_soft_skills(soft_skills)
+            supabase.table(
+                "soft_skills"
+            ).delete().eq(
+                "id",
+                skills[index]["id"]
+            ).execute()
+
+        except Exception as e:
+
+            print(
+                "DELETE SOFT SKILL ERROR:",
+                e
+            )
 
     return redirect("/soft-skills")
+
+
 
 @app.route(
     "/edit-soft-skill/<int:index>",
@@ -1014,14 +1013,32 @@ def edit_soft_skill(index):
 
     if request.method == "POST":
 
-        soft_skills[index]["name"] = request.form.get(
-            "name"
-        )
+        try:
 
-        save_soft_skills(soft_skills)
+            supabase.table(
+                "soft_skills"
+            ).update({
+
+                "skill":
+                request.form.get("name")
+
+            }).eq(
+
+                "id",
+                soft_skills[index]["id"]
+
+            ).execute()
+
+        except Exception as e:
+
+            print(
+                "EDIT SOFT SKILL ERROR:",
+                e
+            )
 
         return redirect("/soft-skills")
 
+    
     return render_template(
         "edit_soft_skill.html",
         skill=soft_skills[index],
@@ -1038,16 +1055,23 @@ def add_extra_curricular():
 
         return redirect("/login")
 
-    extra_curricular = load_extra_curricular()
+    try:
 
-    extra_curricular.append({
+        supabase.table(
+            "extra_curricular"
+        ).insert({
 
-        "name":
-        request.form.get("name")
+            "name":
+            request.form.get("name")
 
-    })
+        }).execute()
 
-    save_extra_curricular(extra_curricular)
+    except Exception as e:
+
+        print(
+            "ADD EXTRA CURRICULAR ERROR:",
+            e
+        )
 
     return redirect("/extra-curricular")
 
@@ -1061,13 +1085,25 @@ def delete_extra_curricular(index):
 
         return redirect("/login")
 
-    extra_curricular = load_extra_curricular()
+    activities = load_extra_curricular()
 
-    if 0 <= index < len(extra_curricular):
+    if 0 <= index < len(activities):
 
-        extra_curricular.pop(index)
+        try:
 
-        save_extra_curricular(extra_curricular)
+            supabase.table(
+                "extra_curricular"
+            ).delete().eq(
+                "id",
+                activities[index]["id"]
+            ).execute()
+
+        except Exception as e:
+
+            print(
+                "DELETE EXTRA CURRICULAR ERROR:",
+                e
+            )
 
     return redirect("/extra-curricular")
 
@@ -1082,32 +1118,49 @@ def edit_extra_curricular(index):
 
         return redirect("/login")
 
-    extra_curricular = load_extra_curricular()
+    activities = load_extra_curricular()
 
-    if index < 0 or index >= len(extra_curricular):
+    if index < 0 or index >= len(activities):
 
         return redirect("/extra-curricular")
 
     if request.method == "POST":
 
-        extra_curricular[index]["name"] = request.form.get(
-            "name"
-        )
+        try:
 
-        save_extra_curricular(extra_curricular)
+            supabase.table(
+                "extra_curricular"
+            ).update({
+
+                "name":
+                request.form.get("name")
+
+            }).eq(
+
+                "id",
+                activities[index]["id"]
+
+            ).execute()
+
+        except Exception as e:
+
+            print(
+                "EDIT EXTRA CURRICULAR ERROR:",
+                e
+            )
 
         return redirect("/extra-curricular")
 
     return render_template(
         "edit_extra_curricular.html",
-        activity=extra_curricular[index],
+        activity=activities[index],
         index=index
     )
+
 
 # ==================================================
 # ADD EDUCATION
 # ==================================================
-
 @app.route("/add-education", methods=["POST"])
 def add_education():
 
@@ -1115,28 +1168,34 @@ def add_education():
 
         return redirect("/login")
 
-    education = load_education()
+    try:
 
-    education.append({
+        supabase.table(
+            "education"
+        ).insert({
 
-    "qualification":
-    request.form.get("qualification"),
+            "degree":
+            request.form.get("qualification"),
 
-    "institution":
-    request.form.get("institution"),
+            "institution":
+            request.form.get("institution"),
 
-    "duration":
-    request.form.get("duration"),
+            "year":
+            request.form.get("duration"),
 
-    "result":
-    request.form.get("result")
+            "cgpa":
+            request.form.get("result")
 
-})
+        }).execute()
 
-    save_education(education)
+    except Exception as e:
+
+        print(
+            "ADD EDUCATION ERROR:",
+            e
+        )
 
     return redirect("/education")
-
 
 # ==================================================
 # DELETE EDUCATION
@@ -1153,9 +1212,21 @@ def delete_education(index):
 
     if 0 <= index < len(education):
 
-        education.pop(index)
+        try:
 
-        save_education(education)
+            supabase.table(
+                "education"
+            ).delete().eq(
+                "id",
+                education[index]["id"]
+            ).execute()
+
+        except Exception as e:
+
+            print(
+                "DELETE EDUCATION ERROR:",
+                e
+            )
 
     return redirect("/education")
 
@@ -1171,41 +1242,47 @@ def delete_education(index):
 def edit_education(index):
 
     if not session.get("admin"):
-
         return redirect("/login")
 
     education = load_education()
 
     if index < 0 or index >= len(education):
-
         return redirect("/education")
 
     if request.method == "POST":
 
-       education[index]["qualification"] = request.form.get(
-            "qualification"
-        )
-       education[index]["institution"] = request.form.get(
-            "institution"
-        )
-       education[index]["duration"] = request.form.get(
-            "duration"
-        )
-       education[index]["result"] = request.form.get(
-            "result"
-        )
-       save_education(education)
-       return redirect("/education")
+        try:
+
+            supabase.table(
+                "education"
+            ).update({
+
+                "degree": request.form.get("qualification"),
+                "institution": request.form.get("institution"),
+                "year": request.form.get("duration"),
+                "cgpa": request.form.get("result")
+
+            }).eq(
+                "id",
+                education[index]["id"]
+            ).execute()
+
+        except Exception as e:
+
+            print("EDIT EDUCATION ERROR:", e)
+
+        return redirect("/education")
 
     return render_template(
         "edit_education.html",
         education=education[index],
         index=index
     )
+
+
 # ==================================================
 # ADD INTERNSHIP
 # ==================================================
-
 @app.route(
     "/add-internship",
     methods=["POST"]
@@ -1216,22 +1293,28 @@ def add_internship():
 
         return redirect("/login")
 
-    internships = load_internships()
+    try:
 
-    internships.append({
+        supabase.table(
+            "internships"
+        ).insert({
 
-        "company":
-        request.form.get("company"),
+            "company":
+            request.form.get("company"),
 
-        "description":
-        request.form.get("description")
+            "description":
+            request.form.get("description")
 
-    })
+        }).execute()
 
-    save_internships(internships)
+    except Exception as e:
+
+        print(
+            "ADD INTERNSHIP ERROR:",
+            e
+        )
 
     return redirect("/internships")
-
 
 # ==================================================
 # DELETE INTERNSHIP
@@ -1248,17 +1331,27 @@ def delete_internship(index):
 
     if 0 <= index < len(internships):
 
-        internships.pop(index)
+        try:
 
-        save_internships(internships)
+            supabase.table(
+                "internships"
+            ).delete().eq(
+                "id",
+                internships[index]["id"]
+            ).execute()
+
+        except Exception as e:
+
+            print(
+                "DELETE INTERNSHIP ERROR:",
+                e
+            )
 
     return redirect("/internships")
-
 
 # ==================================================
 # EDIT INTERNSHIP
 # ==================================================
-
 @app.route(
     "/edit-internship/<int:index>",
     methods=["GET", "POST"]
@@ -1277,15 +1370,31 @@ def edit_internship(index):
 
     if request.method == "POST":
 
-        internships[index]["company"] = request.form.get(
-            "company"
-        )
+        try:
 
-        internships[index]["description"] = request.form.get(
-            "description"
-        )
+            supabase.table(
+                "internships"
+            ).update({
 
-        save_internships(internships)
+                "company":
+                request.form.get("company"),
+
+                "description":
+                request.form.get("description")
+
+            }).eq(
+
+                "id",
+                internships[index]["id"]
+
+            ).execute()
+
+        except Exception as e:
+
+            print(
+                "EDIT INTERNSHIP ERROR:",
+                e
+            )
 
         return redirect("/internships")
 
@@ -1294,6 +1403,8 @@ def edit_internship(index):
         internship=internships[index],
         index=index
     )
+
+
 # ==================================================
 # ADD ACHIEVEMENT
 # ==================================================
@@ -1507,6 +1618,7 @@ def delete_certificate(index):
 
     return redirect("/certificates")
 
+
 # ==================================================
 # CREATE PROJECT
 # ==================================================
@@ -1521,54 +1633,56 @@ def create_project():
     title = request.form.get("title")
 
     slug = secure_filename(
-    title.lower()
-)
-
-    project_folder = os.path.join(
-        PROJECTS_FOLDER,
-        slug
+        title.lower()
     )
 
-    os.makedirs(project_folder, exist_ok=True)
+    try:
 
-    
-    project = {
+        supabase.table(
+            "projects"
+        ).insert({
 
-        "title":
-        title,
+            "title":
+            title,
 
-        "slug":
-        slug,
+            "slug":
+            slug,
 
-        "short_description":
-        request.form.get("short_description"),
+            "short_description":
+            request.form.get(
+                "short_description"
+            ),
 
-        "full_description":
-        request.form.get("full_description"),
+            "full_description":
+            request.form.get(
+                "full_description"
+            ),
 
-        "category":
-        request.form.get("category"),
+            "category":
+            request.form.get(
+                "category"
+            ),
 
-        "year":
-        request.form.get("year"),
+            "year":
+            request.form.get(
+                "year"
+            ),
 
-        "tech_stack":
-        [
-            tech.strip()
-            for tech in request.form.get(
+            "tech_stack":
+            request.form.get(
                 "tech_stack"
-            ).split(",")
-        ],
+            )
 
-        "gallery":
-        []
+        }).execute()
 
-    }
+    except Exception as e:
 
-    save_project(project)
+        print(
+            "CREATE PROJECT ERROR:",
+            e
+        )
 
     return redirect("/projects")
-
 
 # ==================================================
 # PROJECT PAGE
@@ -1631,34 +1745,53 @@ def edit_project(slug):
 
     if request.method == "POST":
 
-        project["title"] = request.form.get("title")
+        try:
 
-        project["short_description"] = request.form.get(
-            "short_description"
-        )
+            supabase.table(
+                "projects"
+            ).update({
 
-        project["full_description"] = request.form.get(
-            "full_description"
-        )
+                "title":
+                request.form.get("title"),
 
-        project["category"] = request.form.get(
-            "category"
-        )
+                "short_description":
+                request.form.get(
+                    "short_description"
+                ),
 
-        project["year"] = request.form.get(
-            "year"
-        )
+                "full_description":
+                request.form.get(
+                    "full_description"
+                ),
 
-        project["tech_stack"] = [
+                "category":
+                request.form.get(
+                    "category"
+                ),
 
-            tech.strip()
+                "year":
+                request.form.get(
+                    "year"
+                ),
 
-            for tech in request.form.get(
-                "tech_stack"
-            ).split(",")
-        ]
+                "tech_stack":
+                request.form.get(
+                    "tech_stack"
+                )
 
-        save_project(project)
+            }).eq(
+
+                "id",
+                project["id"]
+
+            ).execute()
+
+        except Exception as e:
+
+            print(
+                "EDIT PROJECT ERROR:",
+                e
+            )
 
         return redirect("/projects")
 
@@ -1782,32 +1915,44 @@ def project_gallery_image(
 def edit_skill(index):
 
     if not session.get("admin"):
-
         return redirect("/login")
 
     skills = load_skills()
 
     if index < 0 or index >= len(skills):
-
         return redirect("/skills")
+
+    skill = skills[index]
 
     if request.method == "POST":
 
-        skills[index]["name"] = request.form.get(
-            "name"
-        )
+        try:
 
-        skills[index]["level"] = int(
-            request.form.get("level")
-        )
+            supabase.table("skills").update({
 
-        save_skills(skills)
+                "name": request.form.get("name"),
+
+                "level": int(
+                    request.form.get("level")
+                )
+
+            }).eq(
+                "id",
+                skill["id"]
+            ).execute()
+
+        except Exception as e:
+
+            print(
+                "EDIT SKILL ERROR:",
+                e
+            )
 
         return redirect("/skills")
 
     return render_template(
         "edit_skill.html",
-        skill=skills[index],
+        skill=skill,
         index=index
     )
 
@@ -1872,6 +2017,7 @@ def edit_achievement(index):
         achievement=achievements[index]
     )
 
+
 # ==================================================
 # DELETE PROJECT
 # ==================================================
@@ -1880,28 +2026,26 @@ def edit_achievement(index):
 def delete_project(slug):
 
     if not session.get("admin"):
+
         return redirect("/login")
 
-    project_folder = os.path.join(
-        PROJECTS_FOLDER,
-        slug
-    )
+    try:
 
-    if os.path.exists(project_folder):
+        supabase.table(
+            "projects"
+        ).delete().eq(
+            "slug",
+            slug
+        ).execute()
 
-        shutil.rmtree(project_folder)
+    except Exception as e:
+
+        print(
+            "DELETE PROJECT ERROR:",
+            e
+        )
 
     return redirect("/projects")
-
-
-@app.route("/visitor-count")
-def visitor_count():
-
-    return {
-        "count": get_visitor_count()
-    }
-
-
 
 # ==================================================
 # MAIN
