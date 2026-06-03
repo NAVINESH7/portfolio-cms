@@ -105,16 +105,13 @@ Gallery
 
 {% for image in project.gallery %}
 
-<a href="{{ image }}" target="_blank">
-
-    <img
-        src="{{ image }}"
-        class="rounded-2xl w-full hover:scale-105 transition duration-300 cursor-pointer"
-        loading="lazy"
-        alt="{{ project.title }}"
-    >
-
-</a>
+<img
+    src="{{ image }}"
+    onclick="openImage('{{ image }}')"
+    class="rounded-2xl w-full hover:scale-105 transition duration-300 cursor-pointer"
+    loading="lazy"
+    alt="{{ project.title }}"
+>
 
 {% endfor %}
 
@@ -125,6 +122,50 @@ Gallery
 </div>
 
 </div>
+
+<div
+    id="lightbox"
+    class="fixed inset-0 bg-black/90 hidden items-center justify-center z-50"
+    onclick="closeImage()"
+>
+
+    <span
+        class="absolute top-6 right-8 text-white text-5xl cursor-pointer"
+    >
+        &times;
+    </span>
+
+    <img
+    id="lightbox-image"
+    class="max-w-[95%] max-h-[90vh] object-contain rounded-2xl"
+    onclick="event.stopPropagation()"
+>
+
+</div>
+
+<script>
+
+function openImage(src)
+{
+    document.getElementById("lightbox-image").src = src;
+
+    document.getElementById("lightbox")
+        .classList.remove("hidden");
+
+    document.getElementById("lightbox")
+        .classList.add("flex");
+}
+
+function closeImage()
+{
+    document.getElementById("lightbox")
+        .classList.remove("flex");
+
+    document.getElementById("lightbox")
+        .classList.add("hidden");
+}
+
+</script>
 
 </body>
 
