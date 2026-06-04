@@ -90,7 +90,7 @@ def save_settings(settings):
                 "key": key,
                 "value": value
 
-            }).execute()
+            }, on_conflict="key").execute()
 
     except Exception as e:
 
