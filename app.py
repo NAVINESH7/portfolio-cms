@@ -11,8 +11,6 @@ from flask import (
 )
 
 import os
-import json
-import shutil
 from datetime import datetime, date
 from werkzeug.utils import secure_filename
 
@@ -28,20 +26,6 @@ app.secret_key = os.getenv("SECRET_KEY")
 ADMIN_USERNAME = os.getenv("ADMIN_USERNAME")
 ADMIN_PASSWORD = os.getenv("ADMIN_PASSWORD")
 
-PROJECTS_FOLDER = "projects"
-
-UPLOAD_FOLDER = "static/uploads"
-CERTIFICATE_FOLDER = "static/certificates"
-
-
-os.makedirs(
-    CERTIFICATE_FOLDER,
-    exist_ok=True
-)
-
-os.makedirs(PROJECTS_FOLDER, exist_ok=True)
-
-os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 
 # ==================================================
@@ -130,15 +114,7 @@ def load_skills():
         return []
 
 
-def save_skills(skills):
 
-    with open("skills.json", "w") as file:
-
-        json.dump(
-            skills,
-            file,
-            indent=4
-        )
 
 # ==================================================
 # SOFT SKILLS
@@ -165,15 +141,7 @@ def load_soft_skills():
         return []
 
 
-def save_soft_skills(soft_skills):
 
-    with open("soft_skills.json", "w") as file:
-
-        json.dump(
-            soft_skills,
-            file,
-            indent=4
-        )
 
 # ==================================================
 # EXTRA CURRICULAR
@@ -203,15 +171,7 @@ def load_extra_curricular():
         return []
 
 
-def save_extra_curricular(extra_curricular):
 
-    with open("extra_curricular.json", "w") as file:
-
-        json.dump(
-            extra_curricular,
-            file,
-            indent=4
-        )
 
 # ==================================================
 # EDUCATION
@@ -241,15 +201,7 @@ def load_education():
         return []
 
 
-def save_education(education):
 
-    with open("education.json", "w") as file:
-
-        json.dump(
-            education,
-            file,
-            indent=4
-        )
 
 # ==================================================
 # CERTIFICATES
@@ -296,19 +248,6 @@ def load_certificates():
 
         return []
 
-
-def save_certificates(certificates):
-
-    path = os.path.abspath("certificates.json")
-
-    
-    with open(path, "w") as file:
-
-        json.dump(
-            certificates,
-            file,
-            indent=4
-        )
 
 # ==================================================
 # INTERNSHIPS
@@ -2029,22 +1968,6 @@ def delete_project_image(
 # PROJECT GALLERY IMAGE
 # ==================================================
 
-@app.route(
-    "/projects/<slug>/gallery/<filename>"
-)
-def project_gallery_image(
-    slug,
-    filename
-):
-
-    return send_from_directory(
-        os.path.join(
-            PROJECTS_FOLDER,
-            slug,
-            "gallery"
-        ),
-        filename
-    )
 
 # ==================================================
 # EDIT SKILL
