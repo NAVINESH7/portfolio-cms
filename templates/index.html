@@ -21,7 +21,18 @@ href="https://unpkg.com/aos@2.3.1/dist/aos.css"
 
 <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 
+
+
+
 <style>
+
+
+#loader{
+
+transition:
+opacity 0.5s ease;
+
+}
 
 nav a{
 
@@ -117,15 +128,51 @@ background-position:40px 40px;
 }
 
 }
+
+
 .glass{
 
-background:rgba(255,255,255,0.025);
+position:relative;
 
-border:1px solid rgba(255,255,255,0.05);
+overflow:hidden;
 
-backdrop-filter:blur(8px);
+background:rgba(255,255,255,0.07);
+
+border:1px solid rgba(255,255,255,0.10);
+
+backdrop-filter:blur(28px);
+
+-webkit-backdrop-filter:blur(28px);
 
 border-radius:24px;
+
+box-shadow:
+0 8px 25px rgba(0,0,0,.18);
+
+}
+
+
+.glass::before{
+
+content:"";
+
+position:absolute;
+
+top:0;
+left:0;
+
+width:100%;
+height:100%;
+
+background:
+linear-gradient(
+135deg,
+rgba(255,255,255,.12) 0%,
+rgba(255,255,255,.04) 25%,
+transparent 60%
+);
+
+pointer-events:none;
 
 }
 
@@ -135,11 +182,63 @@ transition:0.35s;
 
 }
 
+.hover-card{
+
+position:relative;
+
+overflow:hidden;
+
+transition:
+transform .4s ease,
+box-shadow .4s ease,
+border-color .4s ease;
+
+}
+
 .hover-card:hover{
 
-transform:translateY(-10px);
+transform:
+translateY(-6px);
 
-box-shadow:0 0 35px rgba(34,211,238,0.2);
+border-color:
+rgba(34,211,238,.35);
+
+box-shadow:
+0 0 18px rgba(34,211,238,.18);
+
+}
+
+
+
+
+
+.hover-card::before{
+
+content:"";
+
+position:absolute;
+
+top:0;
+left:-150%;
+
+width:100%;
+height:100%;
+
+background:
+linear-gradient(
+90deg,
+transparent,
+rgba(34,211,238,.12),
+transparent
+);
+
+transition:.8s;
+
+}
+
+.hover-card:hover::before{
+
+left:150%;
 
 }
 
@@ -149,23 +248,25 @@ transition:1.5s;
 
 }
 
-.project-card{
+.skill-fill{
 
-transform-style:preserve-3d;
+width:0;
 
-transition:0.35s;
+transition:
+width 2s ease;
 
 }
 
-.project-card:hover{
 
-transform:
-rotateX(6deg)
-rotateY(-6deg)
-translateY(-12px);
 
-box-shadow:
-0 0 30px rgba(34,211,238,.25);
+.project-card{
+
+transition:
+transform .25s ease,
+box-shadow .25s ease;
+
+transform-style:
+preserve-3d;
 
 }
 
@@ -180,7 +281,7 @@ border-radius:50%;
 
 filter:blur(120px);
 
-opacity:0.15;
+opacity:0.04;
 
 pointer-events:none;
 
@@ -468,6 +569,10 @@ transform:translateY(0);
 }
 }
 
+
+
+
+
 .star{
 position:fixed;
 width:2px;
@@ -502,6 +607,17 @@ transform:scale(2);
 <body class="grid-bg">
 
 
+<div
+id="loader"
+class="fixed inset-0 bg-slate-950 z-[9999] flex items-center justify-center"
+>
+
+<div
+class="w-16 h-16 border-4 border-cyan-400 border-t-transparent rounded-full animate-spin"
+>
+</div>
+
+</div>
 
 <div class="glow glow1"></div>
 <div class="glow glow2"></div>
@@ -636,6 +752,7 @@ About Me
 
 <div
 class="glass rounded-3xl p-5 sm:p-8 hover-card"
+
 data-aos="fade-up"
 >
 
@@ -701,8 +818,8 @@ class="w-full bg-slate-800 rounded-full h-3"
 >
 
 <div
-class="bg-cyan-400 h-3 rounded-full"
-style="width: {{ skill.level }}%;"
+class="skill-fill bg-cyan-400 h-3 rounded-full"
+data-width="{{ skill.level }}%"
 >
 
 </div>
@@ -718,6 +835,8 @@ style="width: {{ skill.level }}%;"
 </div>
 
 </section>
+
+
 
 
 
@@ -760,6 +879,8 @@ class="space-y-6"
 href="/project/{{ project.slug }}"
 class="project-card block border-b border-cyan-400/10 pb-6 hover:bg-cyan-400/5 transition duration-300 rounded-xl px-4"
 data-name="{{ project.title }}"
+data-aos="fade-up"
+data-aos-delay="{{ loop.index * 100 }}"
 >
 
 <div
@@ -798,7 +919,7 @@ class="text-gray-400 text-lg"
 class="text-cyan-400 text-3xl"
 >
 
-➜
+↗
 
 </div>
 
@@ -813,6 +934,8 @@ class="text-cyan-400 text-3xl"
 </div>
 
 </section>
+
+
 
 
 <!-- INTERNSHIPS -->
@@ -835,6 +958,7 @@ Internships
 
 <div
 class="glass rounded-3xl p-5 hover-card"
+
 >
 
 <h3
@@ -858,6 +982,8 @@ class="text-gray-300 text-base leading-relaxed"
 </section>
 
 
+
+
 <!-- ACHIEVEMENTS -->
 
 <section
@@ -879,6 +1005,7 @@ Achievements
 
 <div
 class="glass rounded-3xl p-5 hover-card"
+
 >
 
 <h3 class="text-xl font-bold text-cyan-400 mb-2">
@@ -898,6 +1025,8 @@ class="glass rounded-3xl p-5 hover-card"
 
 
 </section>
+
+
 
 
 <!-- CERTIFICATES -->
@@ -922,7 +1051,8 @@ Certificates
 {% for cert in certificates %}
 
 <div
-class="border-b border-cyan-400/10 pb-6 hover:bg-cyan-400/5 transition duration-300 rounded-xl px-4 py-4"
+class="hover-card border-b border-cyan-400/10 pb-6 hover:bg-cyan-400/5 transition duration-300 rounded-xl px-4 py-4"
+
 >
 
 <div class="flex gap-6 items-start">
@@ -952,9 +1082,9 @@ class="text-gray-400 text-lg"
 <a
 href="{{ cert.image_url }}"
 target="_blank"
-class="text-cyan-400 text-3xl hover:text-white"
+class="text-cyan-400 text-3xl hover:text-white font-bold"
 >
-👁
+↗
 </a>
 
 </div>
@@ -968,41 +1098,7 @@ class="text-cyan-400 text-3xl hover:text-white"
 </section>
 
 
-<div
-id="certificateModal"
-class="hidden fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-6"
->
 
-<div class="glass rounded-3xl p-8 max-w-3xl w-full relative">
-
-<button
-onclick="closeCertificateModal()"
-class="absolute top-4 right-4 text-cyan-400 text-3xl"
->
-✕
-</button>
-
-<h2
-id="certModalTitle"
-class="text-4xl font-bold text-cyan-400 mb-4"
->
-</h2>
-
-<p
-id="certModalDescription"
-class="text-gray-300 text-lg mb-6"
->
-</p>
-
-<img
-id="certModalImage"
-src=""
-class="w-full rounded-2xl"
->
-
-</div>
-
-</div>
 
 
 <section
@@ -1019,6 +1115,7 @@ Soft Skills
 
 <div
 class="glass rounded-3xl p-5 sm:p-8 hover-card"
+
 >
 
 {% for skill in soft_skills %}
@@ -1060,6 +1157,7 @@ Co & Extra Curricular Activities
 
 <div
 class="glass rounded-3xl p-5 sm:p-8 hover-card"
+style="--delay:4s;"
 >
 
 {% for activity in extra_curricular %}
@@ -1102,7 +1200,10 @@ Education
 
 </h2>
 
-<div class="glass rounded-3xl p-5 sm:p-8">
+<div
+class="glass rounded-3xl p-5 sm:p-8 hover-card"
+
+>
 
 {% for edu in education %}
 
@@ -1159,6 +1260,7 @@ class="max-w-7xl mx-auto pt-24 pb-6 md:pt-28 md:pb-16 px-6 sm:px-10"
 
 <div
 class="glass rounded-3xl p-5 sm:p-8 hover-card"
+
 data-aos="fade-up"
 >
 
@@ -1346,37 +1448,131 @@ document.body.appendChild(star);
 
 }
 
-function openCertificateModal(
-title,
-description,
-image
-){
 
-document.getElementById(
-"certModalTitle"
-).innerText = title;
 
-document.getElementById(
-"certModalDescription"
-).innerText = description;
 
-document.getElementById(
-"certModalImage"
-).src = image;
 
-document.getElementById(
-"certificateModal"
-).classList.remove("hidden");
+const skillObserver =
+new IntersectionObserver(
+(entries)=>{
+
+entries.forEach(entry=>{
+
+if(entry.isIntersecting){
+
+document
+.querySelectorAll(".skill-fill")
+.forEach(bar=>{
+
+bar.style.width =
+bar.dataset.width;
+
+});
+
+skillObserver.disconnect();
+
+}
+
+});
+
+},
+{
+threshold:0.3
+}
+);
+
+skillObserver.observe(
+document.getElementById("skills")
+);
+
+window.addEventListener(
+"scroll",
+()=>{
+
+const nav =
+document.querySelector("nav");
+
+if(window.scrollY > 80){
+
+nav.style.background =
+"rgba(2,6,23,0.85)";
+
+nav.style.backdropFilter =
+"blur(20px)";
+
+}else{
+
+nav.style.background =
+"rgba(255,255,255,0.025)";
 
 }
 
-function closeCertificateModal(){
+});
 
-document.getElementById(
-"certificateModal"
-).classList.add("hidden");
+if(window.innerWidth > 768){
+
+document
+.querySelectorAll(".project-card")
+.forEach(card=>{
+
+card.addEventListener(
+"mousemove",
+e=>{
+
+const rect =
+card.getBoundingClientRect();
+
+const x =
+e.clientX - rect.left;
+
+const y =
+e.clientY - rect.top;
+
+const rotateY =
+(x / rect.width - 0.5) * 10;
+
+const rotateX =
+(y / rect.height - 0.5) * -10;
+
+card.style.transform =
+`perspective(1000px)
+rotateX(${rotateX}deg)
+rotateY(${rotateY}deg)
+translateY(-8px)`;
+
+});
+
+card.addEventListener(
+"mouseleave",
+()=>{
+
+card.style.transform =
+"perspective(1000px) rotateX(0) rotateY(0)";
+
+});
+
+});
 
 }
+
+window.addEventListener(
+"load",
+()=>{
+
+const loader =
+document.getElementById("loader");
+
+loader.style.opacity = "0";
+
+setTimeout(()=>{
+
+loader.remove();
+
+},500);
+
+});
+
+
 
 </script>
 
