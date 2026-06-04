@@ -482,38 +482,6 @@ once:true
 </script>
 
 
-
-<script>
-
-async function updateVisitorCount() {
-
-    try {
-
-        const response = await fetch("/visitor-count");
-
-        const data = await response.json();
-
-        document.getElementById(
-            "visitorCount"
-        ).innerText = data.count;
-
-    }
-
-    catch(error) {
-
-        console.log(error);
-
-    }
-
-}
-
-setInterval(
-    updateVisitorCount,
-    5000
-);
-
-</script>
-
 </body>
 
 </html>

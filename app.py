@@ -13,7 +13,7 @@ from flask import (
 import os
 import json
 import shutil
-from datetime import datetime
+from datetime import datetime, date
 from werkzeug.utils import secure_filename
 
 load_dotenv()
@@ -32,7 +32,7 @@ PROJECTS_FOLDER = "projects"
 
 UPLOAD_FOLDER = "static/uploads"
 CERTIFICATE_FOLDER = "static/certificates"
-VISITORS_FILE = "visitors.json"
+
 
 os.makedirs(
     CERTIFICATE_FOLDER,
@@ -340,33 +340,28 @@ def load_internships():
 # ==================================================
 # ACHIEVEMENTS
 # ==================================================
-
 def load_achievements():
 
-    if os.path.exists("achievements.json"):
+    try:
 
-        try:
-
-            with open("achievements.json", "r") as file:
-
-                data = json.load(file)
-
-                
-
-                return data
-
-        except Exception as e:
-            return []
-
-def save_achievements(achievements):
-
-    with open("achievements.json", "w") as file:
-
-        json.dump(
-            achievements,
-            file,
-            indent=4
+        result = (
+            supabase
+            .table("achievements")
+            .select("*")
+            .order("id")
+            .execute()
         )
+
+        return result.data
+
+    except Exception as e:
+
+        print(
+            "ACHIEVEMENTS LOAD ERROR:",
+            e
+        )
+
+        return []
 
 # ==================================================
 # VISITOR COUNTER
@@ -374,138 +369,124 @@ def save_achievements(achievements):
 
 def get_visitor_count():
 
-    if os.path.exists(VISITORS_FILE):
+    try:
 
-        try:
+        result = (
+            supabase
+            .table("visitors")
+            .select("total_visitors")
+            .eq("id", 1)
+            .single()
+            .execute()
+        )
 
-            with open(VISITORS_FILE, "r") as file:
+        return result.data["total_visitors"]
 
-                data = json.load(file)
+    except Exception as e:
 
-                return data.get("count", 0)
+        print(
+            "VISITOR COUNT ERROR:",
+            e
+        )
 
-        except:
-
-            pass
-
-    return 0
+        return 0
 
 
 def increment_visitor_count():
 
-    today = datetime.now().strftime(
-        "%Y-%m-%d"
-    )
+    try:
 
-    data = {
+        today = date.today().isoformat()
 
-        "count": 0,
-        "daily": {}
-
-    }
-
-    if os.path.exists(VISITORS_FILE):
-
-        try:
-
-            with open(VISITORS_FILE, "r") as file:
-
-                data = json.load(file)
-
-        except:
-
-            pass
-
-    data["count"] += 1
-
-    if "daily" not in data:
-
-        data["daily"] = {}
-
-    data["daily"][today] = (
-
-        data["daily"].get(today, 0) + 1
-
-    )
-
-   
-    with open(VISITORS_FILE, "w") as file:
-
-        json.dump(
-            data,
-            file,
-            indent=4
+        result = (
+            supabase
+            .table("visitors")
+            .select("*")
+            .eq("id", 1)
+            .single()
+            .execute()
         )
+
+        data = result.data
+
+        total = data["total_visitors"]
+        today_count = data["today_visitors"]
+        last_date = data["last_visit_date"]
+
+        if str(last_date) != today:
+
+            today_count = 0
+
+        total += 1
+        today_count += 1
+
+        supabase.table(
+            "visitors"
+        ).update({
+
+            "total_visitors": total,
+            "today_visitors": today_count,
+            "last_visit_date": today
+
+        }).eq(
+            "id",
+            1
+        ).execute()
+
+        return total
+
+    except Exception as e:
+
+        print(
+            "INCREMENT VISITOR ERROR:",
+            e
+        )
+
+        return 0
 
 
 def get_visitor_stats():
 
-    if not os.path.exists(VISITORS_FILE):
-
-        return {
-            "today": 0,
-            "week": 0,
-            "month": 0
-        }
-
     try:
 
-        with open(VISITORS_FILE, "r") as file:
+        result = (
+            supabase
+            .table("visitors")
+            .select("*")
+            .eq("id", 1)
+            .single()
+            .execute()
+        )
 
-            data = json.load(file)
-
-    except:
+        data = result.data
 
         return {
+
+            "today":
+            data["today_visitors"],
+
+            "week":
+            data["total_visitors"],
+
+            "month":
+            data["total_visitors"]
+
+        }
+
+    except Exception as e:
+
+        print(
+            "VISITOR STATS ERROR:",
+            e
+        )
+
+        return {
+
             "today": 0,
             "week": 0,
             "month": 0
+
         }
-
-    daily = data.get("daily", {})
-
-    today_count = 0
-    week_count = 0
-    month_count = 0
-
-    current_date = datetime.now()
-
-    for date_str, count in daily.items():
-
-        try:
-
-            visit_date = datetime.strptime(
-                date_str,
-                "%Y-%m-%d"
-            )
-
-            days = (
-                current_date - visit_date
-            ).days
-
-            if days == 0:
-
-                today_count += count
-
-            if days <= 7:
-
-                week_count += count
-
-            if days <= 30:
-
-                month_count += count
-
-        except:
-
-            pass
-
-    return {
-
-        "today": today_count,
-        "week": week_count,
-        "month": month_count
-
-    }
 
 # ==================================================
 # PROJECTS
@@ -764,21 +745,9 @@ def achievements_page():
     if not session.get("admin"):
         return redirect("/login")
 
-    achievements = []
-
-    if os.path.exists("achievements.json"):
-
-        with open("achievements.json", "r") as file:
-
-            try:
-                achievements = json.load(file)
-
-            except:
-                achievements = []
-
     return render_template(
         "achievements.html",
-        achievements=achievements
+        achievements=load_achievements()
     )
 
 
@@ -1483,45 +1452,35 @@ def edit_internship(index):
 # ==================================================
 # ADD ACHIEVEMENT
 # ==================================================
-
 @app.route("/add-achievement", methods=["POST"])
 def add_achievement():
 
     if not session.get("admin"):
         return redirect("/login")
 
-    if os.path.exists("achievements.json"):
+    try:
 
-        with open("achievements.json", "r") as file:
+        supabase.table(
+            "achievements"
+        ).insert({
 
-            try:
-                achievements = json.load(file)
+            "title":
+            request.form.get("title"),
 
-            except:
-                achievements = []
+            "description":
+            request.form.get("description")
 
-    else:
+        }).execute()
 
-        achievements = []
+    except Exception as e:
 
-    achievements.append({
-
-        "title": request.form["title"],
-
-        "description": request.form["description"]
-
-    })
-
-    with open("achievements.json", "w") as file:
-
-        json.dump(
-            achievements,
-            file,
-            indent=4
+        print(
+            "ADD ACHIEVEMENT ERROR:",
+            e
         )
 
-   
     return redirect("/achievements")
+
 
 # ==================================================
 # ADD CERTIFICATE
@@ -2148,18 +2107,27 @@ def delete_achievement(index):
     if not session.get("admin"):
         return redirect("/login")
 
-    with open("achievements.json", "r") as file:
-        achievements = json.load(file)
+    achievements = load_achievements()
 
     if 0 <= index < len(achievements):
-        achievements.pop(index)
 
-    with open("achievements.json", "w") as file:
-        json.dump(
-            achievements,
-            file,
-            indent=4
-        )
+        try:
+
+            supabase.table(
+                "achievements"
+            ).delete().eq(
+
+                "id",
+                achievements[index]["id"]
+
+            ).execute()
+
+        except Exception as e:
+
+            print(
+                "DELETE ACHIEVEMENT ERROR:",
+                e
+            )
 
     return redirect("/achievements")
 
@@ -2172,25 +2140,37 @@ def edit_achievement(index):
     if not session.get("admin"):
         return redirect("/login")
 
-    with open("achievements.json", "r") as file:
-        achievements = json.load(file)
+    achievements = load_achievements()
+
+    if index < 0 or index >= len(achievements):
+        return redirect("/achievements")
 
     if request.method == "POST":
 
-        achievements[index]["title"] = request.form.get(
-            "title"
-        )
+        try:
 
-        achievements[index]["description"] = request.form.get(
-            "description"
-        )
+            supabase.table(
+                "achievements"
+            ).update({
 
-        with open("achievements.json", "w") as file:
+                "title":
+                request.form.get("title"),
 
-            json.dump(
-                achievements,
-                file,
-                indent=4
+                "description":
+                request.form.get("description")
+
+            }).eq(
+
+                "id",
+                achievements[index]["id"]
+
+            ).execute()
+
+        except Exception as e:
+
+            print(
+                "EDIT ACHIEVEMENT ERROR:",
+                e
             )
 
         return redirect("/achievements")
